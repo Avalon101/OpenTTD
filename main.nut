@@ -7,6 +7,8 @@ E <- GSLog.Error;
 require("version.nut");
 //// Load industry table
 require("industry_list.nut");
+//// Load town names
+require("town_list.nut");
 //// Load Tiles library, for rand tile selection
 require("tile.nut");
 //// Load player class for keeping track of players cities and other player related stuff
@@ -20,12 +22,14 @@ class Builder extends GSController
 	isComplete = null;
 	gPlayers = null;
 	gTowns = null;
+	gTownNames = null;
 	gTownIndustries = null;
 	players = null;
 	constructor() {
 		this.isComplete = false;
 		this.gPlayers = GSController.GetSetting("number_of_players");
 		this.gTowns = GSController.GetSetting("number_of_towns");
+		this.gTownNames = TownNames;
 		this.gTownIndustries = GSController.GetSetting("max_town_industries");
 		players = []; for(local p=1; p<=this.gPlayers; p++) players.append(Player());
 	}
@@ -34,12 +38,13 @@ function Builder::Start()
 {
 	Log("Builder has begun!");
 	if (this.isComplete == false) {
+		GSGame.Pause();			//Pause game while GS is building the map.
 		this.Init();		// running some basic settings and other necessary stuff.. dont change this.
 		this.RunOnce();		// Building the towns and industries, assigning evenly between players. (the actual things we want to make with this script)
+		GSGame.Unpause();
 	}
 	else if (this.isComplete == true) Log("Script has already been run!");
 	Log("Builder has finished!");
-	//GSGame.Unpause(); //Unpause game after the gamescript has finished.
 	while (true)
 	{
 		this.Sleep(6000);
@@ -49,8 +54,8 @@ function Builder::Start()
 function Builder::Init()
 {	
 	this.ChangeSetting("construction.command_pause_level", 3); // Make it possible to build while game is pause.
-	GSGame.Pause();			//Pause game while GS is building the map.
 	this.ResetRandom();
+	this.gTownNames = this.Randomize(this.gTownNames);
 }
 
 /// SAVE and LOAD
@@ -97,7 +102,7 @@ function Builder::MakeTowns()
 				{
 					// Assigning player number to town name
 					local town_id = GSTown.GetTownCount()-1;
-					local town_name = GSTown.GetName(town_id);
+					local town_name = this.gTownNames.pop(); //Rename from custom town names list
 					local new_name = p + " - " + town_name;
 					GSTown.SetName(town_id,new_name);
 					// Add the city to the town index reference on the players city
@@ -209,6 +214,20 @@ function Builder::ResetRandom()
 }
 
 //////////////////////////////
+// Randomize a list
+function Builder::Randomize(old_list)
+{
+	local new_list = [];
+	while(old_list.len()>0)
+	{
+		local i = GSBase.RandRange(old_list.len());
+		new_list.append(old_list[i]);
+		old_list.remove(i);
+	}
+	return new_list;
+}
+
+//////////////////////////////
 // Shorten the process of handling settings.
 function Builder::ChangeSetting(setting, value)
 {
@@ -220,3 +239,12 @@ function Builder::ChangeSetting(setting, value)
 	else{ E("Somthing went wrong.. please contact developer!");return false;}
 }
 
+//////////////////////////////
+// Change current balance to desired absolute value, compared to built-in relative change.
+function Builder::MoneySetBalance(new_balance)
+{
+	local balance = GSCompany.GetBankBalance(GSCompany.COMPANY_FIRST);
+	//local loan = GSCompany.GetLoanAmount();
+	local money_diff = new_balance - balance;
+	GSCompany.ChangeBankBalance(GSCompany.COMPANY_FIRST, money_diff, GSCompany.EXPENSES_TRAIN_INC);
+}
