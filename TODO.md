@@ -6,9 +6,9 @@ bugs:
 Resultat: Industri bliver ikke placeret, eller de bliver placeret ivandhøjde og oversvømmet.
 
 - Skilte placeret tæt på kantet af kortet
-:Resultat: landskabsændringerne forsøger at rette landskabet helevejen igennem kortet fra anden side.
+Resultat: landskabsændringerne forsøger at rette landskabet helevejen igennem kortet fra anden side.
 
-- Skilte placeret for tæt på hinanden.
+- Skilte placeret for tæt på hinanden. /n
 Resultat: Der er ikke plads til at efterfølgende industrier bliver bygget.
 
 - Skilte i byerne ligger oven på hinanden.
