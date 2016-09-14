@@ -6,15 +6,15 @@ E <- GSLog.Error;
 //// Load version
 require("version.nut");
 //// Load industry table
-require("libs/industry_list.nut");
+require("industry_list.nut");
 //// Load town names
-require("libs/town_list.nut");
+require("town_list.nut");
 //// Load Tiles library, for rand tile selection
-require("libs/tile.nut");
+require("tile.nut");
 //// Load player class for keeping track of players cities and other player related stuff
-require("libs/player.nut");
+require("player.nut");
 //// Load Util class containing various util functions
-require("libs/util.nut");
+require("util.nut");
 //test
 
 class Builder extends GSController 
