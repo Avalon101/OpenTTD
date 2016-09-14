@@ -20,7 +20,7 @@ Resultat: Industrien bliver ikke placeret.
 - [ ] Nogle industrier (fx Iron Ore Mine) bliver ikke placeret selv om der er plads
 Resultat: Skal undersøges nærmere !
 
-- [ ]Nogle industrier (fx Dairy Farm) bliver ikke placeret i bjergene selv om de ikke har behov for landskabsændringer
+- [ ] Nogle industrier (fx Dairy Farm) bliver ikke placeret i bjergene selv om de ikke har behov for landskabsændringer
 Resultat: skal undersæges nærmere (Der er muligvis regelset for hvor man må trykke)
 
 - [ ] Floder bliver ikke leveled
