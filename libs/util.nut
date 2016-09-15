@@ -35,3 +35,12 @@ function Util::Borders(tile, dx, dy)  // Check that the placement of industries 
 			local delta = [dx, dy];
 			return delta;
 }
+
+//This function places an Industry.
+function Util::PlaceIndustry(id, tile)
+{
+	if (GSIndustryType.IsValidIndustryType(id)){
+		local success = GSIndustryType.BuildIndustry(id, tile);
+		return success;
+	}
+}

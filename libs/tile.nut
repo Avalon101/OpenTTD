@@ -26,8 +26,10 @@ function Tile::RandLand() // Land tile
 
 function Tile::Rand() // Any random tile
 {
+	local tile = 0;
 	local mapsize = GSMap.GetMapSize();
-	local tile = GSBase.RandRange(mapsize) -1;
+	do{tile = GSBase.RandRange(mapsize) -15} //reducing the axis of the maps by 15 tiles to ensure we will always place the industries within the map borders.
+	while (!GSMap.IsValidTile(tile));
 	return tile;
 }
 
@@ -48,9 +50,8 @@ function Tile::LevelTiles(current, dx, dy)
 	
 	enum ExpensesType {EXPENSES_CONSTRUCTION = 1};
 
-	//local companyID = GSCompany.ResolveCompanyID(0);
-	//Log ("Company Resolved: "+companyID);
-	local companyMoneySuccess = GSCompany.ChangeBankBalance(0, 10000000, ExpensesType.EXPENSES_CONSTRUCTION);
+	local balance = GSCompany.GetBankBalance(0); 
+	local companyMoneySuccess = GSCompany.ChangeBankBalance(0, 1000000+(1000000-balance), ExpensesType.EXPENSES_CONSTRUCTION);
 
 	local companyOne = GSCompanyMode(0);
 

@@ -79,12 +79,18 @@ function Builder::RunOnce(){
 	while(!this.isComplete){
 		// Make all towns for all players
 		this.MakeTowns();
-		//this.test();
 
-		// Settomg industry signs
 		local indu = Industries();
-		foreach(i,v in indu.norm) this.SetSigns(GSIndustryType.GetName(v["id"]), v["no"], v["dx"], v["dy"], v["id"]); // Signing all normal industries
-		foreach(i,v in indu.water) this.SetSigns(GSIndustryType.GetName(v["id"]), v["no"], v["dx"], v["dy"], v["id"], false); // Signing all sea industries
+		//Function responsible for all things cencerning placement of land industies on the map.
+		foreach(i,v in indu.norm) this.MakeIndustries(GSIndustryType.GetName(v["id"]), v["no"], v["dx"], v["dy"], v["id"], true); 
+
+		//Function responsible for all things cencerning placement of water industies on the map.
+		foreach(i,v in indu.water) this.MakeIndustries(GSIndustryType.GetName(v["id"]), v["no"], v["dx"], v["dy"], v["id"], false); 
+		
+		//Placing industry signs
+		
+		//foreach(i,v in indu.norm) this.SetSigns(GSIndustryType.GetName(v["id"]), v["no"], v["dx"], v["dy"], v["id"]); // Signing all normal industries
+		//foreach(i,v in indu.water) this.SetSigns(GSIndustryType.GetName(v["id"]), v["no"], v["dx"], v["dy"], v["id"], false); // Signing all sea industries
 		this.SetTownSigns();
 
 		this.isComplete = true;
@@ -162,6 +168,81 @@ function Builder::SetTownSigns()
 	}
 	return;
 }
+
+////Function for placing Industries.
+function Builder::MakeIndustries(text, amount, dx, dy, id, isLandTile){
+	local tile = 0;
+	//This function loops once per number of Industry of each type per player in industry list. Oo
+	for(local i=0; i<amount; i++)
+		{
+			for(local n=1; n<=this.gPlayers; n++){
+				do{
+					//get random tile (also limits the industry placeable area on the map to map size -15 on each axis)
+					tile = this.DrawRandomTile(isLandTile);
+				//a fuction that evaluates the tile is ok in all ways before moving on.				
+				}
+				while(!(this.CheckAll(tile, dx, dy)));		
+
+				//level an area around a tile equal to industry size (NOTE: this funcion returns true even if only a few tiles was leveled!)
+				local tilesSucessfullyLeveled = Tile().LevelTiles(tile, dx, dy);
+
+				//place industry
+				local industryBuildable = GSIndustryType.CanBuildIndustry(id);
+				local industryPlaced = false;
+				if (industryBuildable) {
+					industryPlaced = Util().PlaceIndustry(id, tile);
+				}
+				if (!industryPlaced){
+					E("Industry was not placed at " + tile +", DO SOMETHING ABOUT IT NOOB!");
+				}
+				//set sign
+				this.SetSign(text, tile);
+			}
+		}
+}
+
+////Return Random tile:
+function Builder::DrawRandomTile(isLandTile){
+	local tile =0;
+	if (isLandTile == true){
+		tile = Tile().RandLand();
+	} else {
+		tile = Tile().RandWater();
+	}
+	return tile;
+}	
+	
+////Evaluate random tile:
+function Builder::CheckAll(tile, dx, dy){
+	local result = false;
+
+	local waterTile = GSTile.IsWaterTile(tile);
+	if (!waterTile) {
+		//evaluate tile is buildbable (not too steep and not a shore tile) and that an area around the tile is buildable.
+		local buildable = GSTile.IsBuildable (tile);
+		local coastTile = GSTile.IsCoastTile (tile);				
+		local steepSlope = GSTile.IsSteepSlope(GSTile.GetSlope(tile));
+		local buildableRectangle = GSTile.IsBuildableRectangle(tile, dx+10, dy+10); //A buffer is added to dx and dy to ensure that raising the landscape wont accidently happen too close to other already placed industries or a city.
+
+		//Jeg kan ikke finde en metode som checker at vi rent faktisk KAN level før vi prøver =(
+
+		if (buildable && buildableRectangle && !coastTile && !steepSlope){
+			result = true;
+		}	
+	} else {
+		result = true;
+	}
+	return result;
+}
+
+
+
+
+
+
+
+
+
 
 
 
