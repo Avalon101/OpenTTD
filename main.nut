@@ -176,27 +176,28 @@ function Builder::MakeIndustries(text, amount, dx, dy, id, isLandTile){
 	for(local i=0; i<amount; i++)
 		{
 			for(local n=1; n<=this.gPlayers; n++){
-				do{
-					//get random tile (also limits the industry placeable area on the map to map size -15 on each axis)
-					tile = this.DrawRandomTile(isLandTile);
-				//a fuction that evaluates the tile is ok in all ways before moving on.				
-				}
-				while(!(this.CheckAll(tile, dx, dy)));		
-
-				//level an area around a tile equal to industry size (NOTE: this funcion returns true even if only a few tiles was leveled!)
-				local tilesSucessfullyLeveled = Tile().LevelTiles(tile, dx, dy);
-
-				//place industry
-				local industryBuildable = GSIndustryType.CanBuildIndustry(id);
 				local industryPlaced = false;
-				if (industryBuildable) {
-					industryPlaced = Util().PlaceIndustry(id, tile);
-				}
-				if (!industryPlaced){
-					E("Industry was not placed at " + tile +", DO SOMETHING ABOUT IT NOOB!");
-				}
-				//set sign
-				this.SetSign(text, tile);
+				do{
+					Log("Trying to place: "+text);
+					do{
+						//get random tile (also limits the industry placeable area on the map to map size -15 on each axis)
+						tile = this.DrawRandomTile(isLandTile);
+					//a fuction that evaluates the tile is ok in all ways before moving on.				
+					}
+					while(!(this.CheckAll(tile, dx, dy)));	
+
+					//level an area around a tile equal to industry size (NOTE: this funcion returns true even if only a few tiles was leveled!)
+					local tilesSucessfullyLeveled = Tile().LevelTiles(tile, dx, dy);
+
+					//place industry		
+					local industryBuildable = GSIndustryType.CanBuildIndustry(id);		
+					if (industryBuildable) {
+							industryPlaced = Util().PlaceIndustry(id, tile);
+					}
+				}while(!industryPlaced);
+			//set sign	
+			local signText = n+" - "+text;	
+			this.SetSign(signText, tile);
 			}
 		}
 }
