@@ -92,3 +92,48 @@ function Util::ChangeSetting(setting, value)
 	}
 	else{ E("Somthing went wrong.. please contact developer!");return false;}
 }
+
+//// SetSign() puts a single sign with text [text] and tile [tile]. Fucntion is used by SetSigns() to put
+//// several signs at random location at once.
+function Util::SetSign(text, tile)
+{
+	//local text = GSIndustryType.GetName(type.id)
+	if (GSSign.IsValidSign(GSSign.BuildSign(tile, text)))
+		{ Log("Sign planted: '" + text + "', " + GSMap.GetTileX(tile) + ", " + GSMap.GetTileY(tile)) + ", " + tile;
+		  return true;}
+	else 
+		{ E("Couldn't plant sign '" + text + "', "  + GSMap.GetTileX(tile) + ", " + GSMap.GetTileY(tile)) + ", " + tile;
+		  return false}	
+}
+
+// unused
+//// SetSigns() can put a select amount of signs at different random locations. landtile defines if
+//// the tile is land or water; set to true for land, false for water
+function util::SetSigns(text, amount, dx, dy, id, landtile = true)
+{
+	local tile = 512;
+	for(local i=0; i<amount; i++)
+	{
+		for(local n=1; n<=this.gPlayers; n++)
+		{
+			local text = n + " - " + text;
+			do{
+				if (landtile == true){ tile = Tile().RandLand()}
+				else { tile = Tile().RandWater()}
+			}
+			while(!(this.SetSign(text, tile)));		
+			local delta = Util().Borders(tile, dx, dy);
+			dx = delta[0];
+			dy = delta[1];
+			local succes = Tile().LevelTiles(tile, dx, dy);
+			local succes = Industries().PlaceIndustry(id, tile); //, dx, dy);
+		}
+	}
+}
+
+
+
+
+
+
+
