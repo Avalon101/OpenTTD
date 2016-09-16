@@ -80,20 +80,12 @@ function Builder::RunOnce(){
 		// Make all towns for all players
 		this.MakeTowns();
 
-		local indu = Industries();
+		//local indu = Industries();
 		//Function responsible for all things cencerning placement of land industies on the map.
-		foreach(i,v in indu.norm) this.MakeIndustries(GSIndustryType.GetName(v["id"]), v["no"], v["dx"], v["dy"], v["id"], true); 
+		//foreach(i,v in indu.norm) this.MakeIndustries(GSIndustryType.GetName(v["id"]), v["no"], v["dx"], v["dy"], v["id"], true); 
 
 		//Function responsible for all things cencerning placement of water industies on the map.
-		foreach(i,v in indu.water)
-		{
-			this.MakeIndustries(GSIndustryType.GetName(v["id"]),
-								v["no"],
-								v["dx"],
-								v["dy"],
-								v["id"],
-								false); 
-		}
+		//foreach(i,v in indu.water) this.MakeIndustries(GSIndustryType.GetName(v["id"]), v["no"], v["dx"],	v["dy"], v["id"],false);
 
 		//Placing industry signs
 		
@@ -144,7 +136,7 @@ function Builder::SetTownSigns()
 		foreach(i,town in ptown_tables){
 			local tile = GSTown.GetLocation(town["town_id"]);
 			local text = "Town - Recycling Depot";
-			this.SetSign(text, tile);
+			Util.SetSign(text, tile);
 		}
 		// For each industry, pull random town belonging to player and sign that industry to the city.
 		// Subtract 1 from the  count in ilist_temp for that industry.
@@ -165,7 +157,7 @@ function Builder::SetTownSigns()
 						local tile = GSTown.GetLocation(ptown_tables[rand_idx].town_id);	// plant sign
 						tile = Tile().Neighbour(tile,ptown_tables[rand_idx].industries.len(), ptown_tables[rand_idx].industries.len());
 						local text = "Town - " + GSIndustryType.GetName(current_industry["id"]);	// plant sign
-						this.SetSign(text, tile);	// plant sign
+						Util.SetSign(text, tile);	// plant sign
 						current_industry["no"]--;	// subtract from counter, so we only put desired amount of this industry on the map
 					}
 				}
