@@ -80,12 +80,12 @@ function Builder::RunOnce(){
 		// Make all towns for all players
 		this.MakeTowns();
 
-		//local indu = Industries();
+		local indu = Industries();
 		//Function responsible for all things cencerning placement of land industies on the map.
-		//foreach(i,v in indu.norm) this.MakeIndustries(GSIndustryType.GetName(v["id"]), v["no"], v["dx"], v["dy"], v["id"], true); 
+		foreach(i,v in indu.norm) this.MakeIndustries(GSIndustryType.GetName(v["id"]), v["no"], v["dx"], v["dy"], v["id"], true); 
 
 		//Function responsible for all things cencerning placement of water industies on the map.
-		//foreach(i,v in indu.water) this.MakeIndustries(GSIndustryType.GetName(v["id"]), v["no"], v["dx"],	v["dy"], v["id"],false);
+		foreach(i,v in indu.water) this.MakeIndustries(GSIndustryType.GetName(v["id"]), v["no"], v["dx"],	v["dy"], v["id"],false);
 
 		//Placing industry signs
 		
