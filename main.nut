@@ -38,10 +38,10 @@ function Builder::Start()
 {
 	Log("Builder has begun!");
 	if (this.isComplete == false) {
-		GSGame.Pause();			//Pause game while GS is building the map.
+		//GSGame.Pause();			//Pause game while GS is building the map.
 		this.Init();		// running some basic settings and other necessary stuff.. dont change this.
 		this.RunOnce();		// Building the towns and industries, assigning evenly between players. (the actual things we want to make with this script)
-		GSGame.Unpause();
+		//GSGame.Unpause();
 	}
 	else if (this.isComplete == true) Log("Script has already been run!");
 	Log("Builder has finished!");
@@ -53,9 +53,9 @@ function Builder::Start()
 
 function Builder::Init()
 {	
-	this.ChangeSetting("construction.command_pause_level", 3); // Make it possible to build while game is pause.
-	this.ResetRandom();
-	this.gTownNames = this.Randomize(this.gTownNames);
+	Util.ChangeSetting("construction.command_pause_level", 3); // Make it possible to build while game is pause.
+	Util.ResetRandom();
+	this.gTownNames = Util.Randomize(this.gTownNames);
 }
 
 /// SAVE and LOAD
@@ -85,8 +85,16 @@ function Builder::RunOnce(){
 		foreach(i,v in indu.norm) this.MakeIndustries(GSIndustryType.GetName(v["id"]), v["no"], v["dx"], v["dy"], v["id"], true); 
 
 		//Function responsible for all things cencerning placement of water industies on the map.
-		foreach(i,v in indu.water) this.MakeIndustries(GSIndustryType.GetName(v["id"]), v["no"], v["dx"], v["dy"], v["id"], false); 
-		
+		foreach(i,v in indu.water)
+		{
+			this.MakeIndustries(GSIndustryType.GetName(v["id"]),
+								v["no"],
+								v["dx"],
+								v["dy"],
+								v["id"],
+								false); 
+		}
+
 		//Placing industry signs
 		
 		//foreach(i,v in indu.norm) this.SetSigns(GSIndustryType.GetName(v["id"]), v["no"], v["dx"], v["dy"], v["id"]); // Signing all normal industries
@@ -181,10 +189,10 @@ function Builder::MakeIndustries(text, amount, dx, dy, id, isLandTile){
 					Log("Trying to place: "+text);
 					do{
 						//get random tile (also limits the industry placeable area on the map to map size -15 on each axis)
-						tile = this.DrawRandomTile(isLandTile);
+						tile = Tile().DrawRandomTile(isLandTile);
 					//a fuction that evaluates the tile is ok in all ways before moving on.				
 					}
-					while(!(this.CheckAll(tile, dx, dy)));	
+					while(!(Tile.CheckAll(tile, dx, dy)));	
 
 					//level an area around a tile equal to industry size (NOTE: this funcion returns true even if only a few tiles was leveled!)
 					local tilesSucessfullyLeveled = Tile().LevelTiles(tile, dx, dy);
@@ -197,136 +205,7 @@ function Builder::MakeIndustries(text, amount, dx, dy, id, isLandTile){
 				}while(!industryPlaced);
 			//set sign	
 			local signText = n+" - "+text;	
-			this.SetSign(signText, tile);
+			Util.SetSign(signText, tile);
 			}
 		}
-}
-
-////Return Random tile:
-function Builder::DrawRandomTile(isLandTile){
-	local tile =0;
-	if (isLandTile == true){
-		tile = Tile().RandLand();
-	} else {
-		tile = Tile().RandWater();
-	}
-	return tile;
-}	
-	
-////Evaluate random tile:
-function Builder::CheckAll(tile, dx, dy){
-	local result = false;
-
-	local waterTile = GSTile.IsWaterTile(tile);
-	if (!waterTile) {
-		//evaluate tile is buildbable (not too steep and not a shore tile) and that an area around the tile is buildable.
-		local buildable = GSTile.IsBuildable (tile);
-		local coastTile = GSTile.IsCoastTile (tile);				
-		local steepSlope = GSTile.IsSteepSlope(GSTile.GetSlope(tile));
-		local buildableRectangle = GSTile.IsBuildableRectangle(tile, dx+10, dy+10); //A buffer is added to dx and dy to ensure that raising the landscape wont accidently happen too close to other already placed industries or a city.
-
-		//Jeg kan ikke finde en metode som checker at vi rent faktisk KAN level før vi prøver =(
-
-		if (buildable && buildableRectangle && !coastTile && !steepSlope){
-			result = true;
-		}	
-	} else {
-		result = true;
-	}
-	return result;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-//// SetSigns() can put a select amount of signs at different random locations. landtile defines if
-//// the tile is land or water; set to true for land, false for water
-function Builder::SetSigns(text, amount, dx, dy, id, landtile = true)
-{
-	local tile = 512;
-	for(local i=0; i<amount; i++)
-	{
-		for(local n=1; n<=this.gPlayers; n++)
-		{
-			local text = n + " - " + text;
-			do{
-				if (landtile == true){ tile = Tile().RandLand()}
-				else { tile = Tile().RandWater()}
-			}
-			while(!(this.SetSign(text, tile)));		
-			local delta = Util().Borders(tile, dx, dy);
-			dx = delta[0];
-			dy = delta[1];
-			local succes = Tile().LevelTiles(tile, dx, dy);
-			local succes = Industries().PlaceIndustry(id, tile); //, dx, dy);
-		}
-	}
-}
-//// SetSign() puts a single sign with text [text] and tile [tile]. Fucntion is used by SetSigns() to put
-//// several signs at random location at once.
-function Builder::SetSign(text, tile)
-{
-	//local text = GSIndustryType.GetName(type.id)
-	if (GSSign.IsValidSign(GSSign.BuildSign(tile, text)))
-		{ Log("Sign planted: '" + text + "', " + GSMap.GetTileX(tile) + ", " + GSMap.GetTileY(tile)) + ", " + tile;
-		  return true;}
-	else 
-		{ E("Couldn't plant sign '" + text + "', "  + GSMap.GetTileX(tile) + ", " + GSMap.GetTileY(tile)) + ", " + tile;
-		  return false}	
-}
-
-///////////////////////////////////
-//// Make sure the random generator won't start at same point every time you load at same save point.
-function Builder::ResetRandom()
-{
-	local systime0 = GSDate.GetSystemTime();
-	local skip = systime0 % 997;
-	//Log("Skipping " + skip + " random calls!");
-	for(local i=0; i<skip; i++){GSBase.RandRangeItem(0,1024);}
-	local timecount = GSDate.GetSystemTime() - systime0;
-	Log("Skipped " + skip + " random calls in " + timecount + " seconds!");
-}
-
-//////////////////////////////
-// Randomize a list
-function Builder::Randomize(old_list)
-{
-	local new_list = [];
-	while(old_list.len()>0)
-	{
-		local i = GSBase.RandRange(old_list.len());
-		new_list.append(old_list[i]);
-		old_list.remove(i);
-	}
-	return new_list;
-}
-
-//////////////////////////////
-// Shorten the process of handling settings.
-function Builder::ChangeSetting(setting, value)
-{
-	if (GSGameSettings.IsValid(setting))
-	{
-		GSGameSettings.SetValue(setting, value);
-		return true;
-	}
-	else{ E("Somthing went wrong.. please contact developer!");return false;}
-}
-
-//////////////////////////////
-// Change current balance to desired absolute value, compared to built-in relative change.
-function Builder::MoneySetBalance(new_balance)
-{
-	local balance = GSCompany.GetBankBalance(GSCompany.COMPANY_FIRST);
-	//local loan = GSCompany.GetLoanAmount();
-	local money_diff = new_balance - balance;
-	GSCompany.ChangeBankBalance(GSCompany.COMPANY_FIRST, money_diff, GSCompany.EXPENSES_TRAIN_INC);
 }
