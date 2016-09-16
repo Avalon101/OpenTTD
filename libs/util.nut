@@ -44,3 +44,51 @@ function Util::PlaceIndustry(id, tile)
 		return success;
 	}
 }
+
+//////////////////////////////
+// Change current balance to desired absolute value, compared to built-in relative change.
+function Util::MoneySetBalance(new_balance)
+{
+	local balance = GSCompany.GetBankBalance(GSCompany.COMPANY_FIRST);
+	//local loan = GSCompany.GetLoanAmount();
+	local money_diff = new_balance - balance;
+	GSCompany.ChangeBankBalance(GSCompany.COMPANY_FIRST, money_diff, GSCompany.EXPENSES_TRAIN_INC);
+}
+
+///////////////////////////////////
+//// Make sure the random generator won't start at same point every time you load at same save point.
+function Util::ResetRandom()
+{
+	local systime0 = GSDate.GetSystemTime();
+	local skip = systime0 % 997;
+	//Log("Skipping " + skip + " random calls!");
+	for(local i=0; i<skip; i++){GSBase.RandRangeItem(0,1024);}
+	local timecount = GSDate.GetSystemTime() - systime0;
+	Log("Skipped " + skip + " random calls in " + timecount + " seconds!");
+}
+
+//////////////////////////////
+// Randomize a list
+function Util::Randomize(old_list)
+{
+	local new_list = [];
+	while(old_list.len()>0)
+	{
+		local i = GSBase.RandRange(old_list.len());
+		new_list.append(old_list[i]);
+		old_list.remove(i);
+	}
+	return new_list;
+}
+
+//////////////////////////////
+// Shorten the process of handling settings.
+function Util::ChangeSetting(setting, value)
+{
+	if (GSGameSettings.IsValid(setting))
+	{
+		GSGameSettings.SetValue(setting, value);
+		return true;
+	}
+	else{ E("Somthing went wrong.. please contact developer!");return false;}
+}
