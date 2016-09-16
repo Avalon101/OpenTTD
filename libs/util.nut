@@ -109,7 +109,7 @@ function Util::SetSign(text, tile)
 // unused
 //// SetSigns() can put a select amount of signs at different random locations. landtile defines if
 //// the tile is land or water; set to true for land, false for water
-function util::SetSigns(text, amount, dx, dy, id, landtile = true)
+function Util::SetSigns(text, amount, dx, dy, id, landtile = true)
 {
 	local tile = 512;
 	for(local i=0; i<amount; i++)
