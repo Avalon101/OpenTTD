@@ -81,13 +81,13 @@ function Builder::RunOnce(){
 		this.MakeTowns();
 
 		local indu = Industries();
-		//Function responsible for all things cencerning placement of land industies on the map.
+		//// Function responsible for all things cencerning placement of land industies on the map.
 		foreach(i,v in indu.norm) this.MakeIndustries(GSIndustryType.GetName(v["id"]), v["no"], v["dx"], v["dy"], v["id"], true); 
 
-		//Function responsible for all things cencerning placement of water industies on the map.
+		//// Function responsible for all things cencerning placement of water industies on the map.
 		foreach(i,v in indu.water) this.MakeIndustries(GSIndustryType.GetName(v["id"]), v["no"], v["dx"],	v["dy"], v["id"],false);
 
-		//Placing industry signs
+		//// Placing industry signs
 		
 		//foreach(i,v in indu.norm) this.SetSigns(GSIndustryType.GetName(v["id"]), v["no"], v["dx"], v["dy"], v["id"]); // Signing all normal industries
 		//foreach(i,v in indu.water) this.SetSigns(GSIndustryType.GetName(v["id"]), v["no"], v["dx"], v["dy"], v["id"], false); // Signing all sea industries
@@ -103,22 +103,28 @@ function Builder::MakeTowns()
 		for(local p=1; p<=this.gPlayers; p++){	// cycle through players
 			local isTownFounded = false;
 			while (!isTownFounded) {
-				local tile = Tile().RandLand();
-				if (GSTown.FoundTown(tile, 0, false, 1, 0))
-				{
-					// Assigning player number to town name
-					local town_id = GSTown.GetTownCount()-1;
-					local town_name = this.gTownNames.pop(); //Rename from custom town names list
-					local new_name = p + " - " + town_name;
-					GSTown.SetName(town_id,new_name);
-					// Add the city to the town index reference on the players city
-					Log(town_id);
-					this.players[p-1].AddTown(town_id);
+				local tile = Tile().RandLand();		// Find random tile
+				local closestTown = GSTile.GetClosestTown(tile); // Find id of closest town
+				local distanceTownToTile = GSTown.GetDistanceManhattanToTile(closestTown, tile); // Get manhattan distance between tile and town
+				Log("distance from " + tile + " to " + "town " + closestTown + ": " + distanceTownToTile);
+				if (distanceTownToTile > 49){
+					if (GSTown.FoundTown(tile, 0, false, 1, 0))
+					{
+						// Assigning player number to town name
+						local town_id = GSTown.GetTownCount()-1;
+						local town_name = this.gTownNames.pop(); //Rename from custom town names list
+						local new_name = p + " - " + town_name;
+						GSTown.SetName(town_id,new_name);
+						// Add the city to the town index reference on the players city
+						Log(town_id);
+						this.players[p-1].AddTown(town_id);
 
-					Log("Town " + new_name + " founded at location " + tile);
-					break;
+						Log("Town " + new_name + " founded at location " + tile);
+						isTownFounded = true;
+					}
+					else {E("Town not founded at location " + tile + ", trying new location...");}
 				}
-				else {E("Town not founded at location " + tile + ", trying new location...");}
+				else {E("Too close to another town");}
 			}
 		}
 	}
