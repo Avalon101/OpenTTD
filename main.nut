@@ -136,13 +136,13 @@ function Builder::SetTownSigns()
 	for(local p=1; p<=this.gPlayers; p++){
 		local ilist_temp = Industries().town;
 		// Remove Recycle depot from list (idx 0) and set Recycle depot sign in all towns
-		Log(ilist_temp[0]["id"]);
 		ilist_temp.remove(0);
 		local ptown_tables = this.players[p-1].towns;
 		foreach(i,town in ptown_tables){
 			local tile = GSTown.GetLocation(town["town_id"]);
 			local text = "Town - Recycling Depot";
 			Util.SetSign(text, tile);
+			ptown_tables[i].industries.append(23);
 		}
 		// For each industry, pull random town belonging to player and sign that industry to the city.
 		// Subtract 1 from the  count in ilist_temp for that industry.
@@ -161,7 +161,7 @@ function Builder::SetTownSigns()
 						ptown_tables[rand_idx].industries.append(current_industry["id"]);	// adds industry to town to keep track of industries in every town
 						this.players[p-1].towns = ptown_tables;				// update the town industry list for this current player
 						local tile = GSTown.GetLocation(ptown_tables[rand_idx].town_id);	// plant sign
-						tile = Tile().Neighbour(tile,ptown_tables[rand_idx].industries.len(), ptown_tables[rand_idx].industries.len());
+						tile = Tile().Neighbour(tile,ptown_tables[rand_idx].industries.len()-1, ptown_tables[rand_idx].industries.len()-1);
 						local text = "Town - " + GSIndustryType.GetName(current_industry["id"]);	// plant sign
 						Util.SetSign(text, tile);	// plant sign
 						current_industry["no"]--;	// subtract from counter, so we only put desired amount of this industry on the map
@@ -170,7 +170,12 @@ function Builder::SetTownSigns()
 			}
 		}
 		Log("Player"+p+" has towns: "+ ptown_tables.len());
-		foreach(i,table in ptown_tables) Log(GSTown.GetName(table["town_id"]) + " has " + (table.industries.len()+1)  + " industries");
+		foreach(i,table in ptown_tables) {
+			Log(GSTown.GetName(table["town_id"]) + " has " + (table.industries.len())  + " industries");
+			foreach(i,industry in table.industries) {
+				Log(GSIndustryType.GetName(industry));
+			}
+		}
 	}
 	return;
 }
