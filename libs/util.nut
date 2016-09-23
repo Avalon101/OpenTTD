@@ -10,18 +10,13 @@ class Util
 //// Functions for different stuff.
 ////////////////////////////////////////////////////
 
-function createSearchGrid(townTile)
+function Util::CreateSearchGrid(townTileX, townTileY)
 {
 	//check we dont go beyond the map borders
-	local townTileX = GSMap.GetTileX(townTile)-1;
-	local townTileY = GSMap.GetTileY(townTile)-1;
-	Log("townTileX:"+townTileX);
-	Log("townTileY:"+townTileY);
-
-	local townGridXStart = this.BordersMin(townTileX);
-	local townGridYStart = this.BordersMin(townTileY);
-	local townGridXEnd = this.BordersMax(townTileX, GSMap.GetMapSizeX()); //Note: kortet ingame i TTD er 2 felter mindre end hvad mapsize returnerer !
-	local townGridYEnd = this.BordersMax(townTileY, GSMap.GetMapSizeY()); //Note: kortet ingame i TTD er 2 felter mindre end hvad mapsize returnerer !
+	local townGridXStart = Util.BordersMin(townTileX);
+	local townGridYStart = Util.BordersMin(townTileY);
+	local townGridXEnd = Util.BordersMax(townTileX, GSMap.GetMapSizeX()); //Note: kortet ingame i TTD er 2 felter mindre end hvad mapsize returnerer !
+	local townGridYEnd = Util.BordersMax(townTileY, GSMap.GetMapSizeY()); //Note: kortet ingame i TTD er 2 felter mindre end hvad mapsize returnerer !
 
 	Log("townGridXStart: "+townGridXStart);
 	Log("townGridYStart: "+townGridYStart);
