@@ -6,42 +6,100 @@ class Util
 	constructor(){}
 }
 
-//////////////////////////
+////////////////////////////////////////////////////
 //// Functions for different stuff.
-function Util::Borders(tile, dx, dy)  // Check that the placement of industries does not go beyond the map borders
+////////////////////////////////////////////////////
+
+function createSearchGrid(townTile)
 {
-			if (GSMap.GetTileX(tile)+dx>GSMap.GetMapSizeX()){				
-				Log("dx has been inverted!");
-				Log("dx = "+dx);
-				dx = -dx;
-				Log("dx = "+dx);
-				Log("Tile X = "+GSMap.GetTileX(tile));
-				Log("Mapsize X = "+GSMap.GetMapSizeX());
-				Log("dy = "+dy);
-				Log("Tile Y = "+GSMap.GetTileY(tile));
-				Log("Mapsize Y = "+GSMap.GetMapSizeY());
+	//check we dont go beyond the map borders
+	local townTileX = GSMap.GetTileX(townTile)-1;
+	local townTileY = GSMap.GetTileY(townTile)-1;
+	Log("townTileX:"+townTileX);
+	Log("townTileY:"+townTileY);
+
+	local townGridXStart = this.BordersMin(townTileX);
+	local townGridYStart = this.BordersMin(townTileY);
+	local townGridXEnd = this.BordersMax(townTileX, GSMap.GetMapSizeX()); //Note: kortet ingame i TTD er 2 felter mindre end hvad mapsize returnerer !
+	local townGridYEnd = this.BordersMax(townTileY, GSMap.GetMapSizeY()); //Note: kortet ingame i TTD er 2 felter mindre end hvad mapsize returnerer !
+
+	Log("townGridXStart: "+townGridXStart);
+	Log("townGridYStart: "+townGridYStart);
+	Log("townGridXEnd: "+townGridXEnd);
+	Log("townGridYEnd: "+townGridYEnd);
+
+	local townGridStartTile = GSMap.GetTileIndex(townGridXStart, townGridYStart);
+	local townGridEndTile = GSMap.GetTileIndex(townGridXEnd, townGridYEnd);
+
+	local townGridList = GSTileList();				
+	townGridList.AddRectangle(townGridStartTile,townGridEndTile);
+	return townGridList;
+}
+
+function Util::GetTownIndustryPlacementArray(townGridList, townId, industryId)
+{	
+	local maxDistanceFromTownCenter = 7;
+	local current_tile = null;
+	local withinTownInfluence = false;
+	local townIndustryPlacementArrayList = GSTileList();
+	for(current_tile = townGridList.Begin(); !townGridList.IsEnd(); current_tile = townGridList.Next()) {
+		local manhattanDistance = GSTown.GetDistanceManhattanToTile(townId, current_tile);		
+		if (industryId == 47 || industryId == 23){
+			if (GSTile.IsWithinTownInfluence(current_tile,townId)){
+				townIndustryPlacementArrayList.AddTile(current_tile);
 			}
-			if (GSMap.GetTileY(tile)+dy>GSMap.GetMapSizeY()){				
-				Log("dy has been inverted!");
-				Log("dy = "+dy);
-				dy = -dy;
-				Log("dy = "+dy);
-				Log("Tile Y = "+GSMap.GetTileY(tile));
-				Log("Mapsize Y = "+GSMap.GetMapSizeY());				
-				Log("dx = "+dx);
-				Log("Tile X = "+GSMap.GetTileX(tile));
-				Log("Mapsize X = "+GSMap.GetMapSizeX());
-			}
-			local delta = [dx, dy];
-			return delta;
+		} else if (manhattanDistance <= maxDistanceFromTownCenter){
+			//local companyOne = GSCompanyMode(0);
+			//local tree = GSTile.PlantTree(current_tile);
+			townIndustryPlacementArrayList.AddTile(current_tile);
+			//Log("Tile was manhattanDistance of "+manhattanDistance+" to town");
+			//Log("Tile X: "+GSMap.GetTileX(current_tile));
+			//Log("Tile Y: "+GSMap.GetTileY(current_tile));
+		}
+	}
+	local townIndustryPlacementArrayListArray = [];
+	for(current_tile = townIndustryPlacementArrayList.Begin(); !townIndustryPlacementArrayList.IsEnd(); current_tile = townIndustryPlacementArrayList.Next()) {					
+		townIndustryPlacementArrayListArray.append(current_tile);
+	}
+	//g("townIndustryPlacementArrayListArray length: "+townIndustryPlacementArrayListArray.len());
+	return townIndustryPlacementArrayListArray;
+}
+
+function Util::TownAreaOffset(tileValue, townTileValue)
+{	
+	local offset = false;
+	if (tileValue<townTileValue){
+		offset = true;
+	}
+	return offset;
+}
+
+function Util::BordersMin(tile)  // Check that the tile in context does not go beyond the map borders (less then 0)
+{	
+	local delta = 1;
+	if (tile-19 > 0){
+		delta = tile-19;
+	}
+	return delta;
+}
+
+function Util::BordersMax(tile, mapsize)  // Check that the tile in context does not go beyond the map borders (More then max)
+{	
+	local delta = mapsize-2; ////Note: kortet ingame i TTD er 2 felter mindre end hvad mapsize returnerer !
+	if (tile+19 < mapsize){				
+		delta = tile+19;
+	}
+	return delta;
 }
 
 //This function places an Industry.
 function Util::PlaceIndustry(id, tile)
-{
+{	
 	if (GSIndustryType.IsValidIndustryType(id)){
 		local success = GSIndustryType.BuildIndustry(id, tile);
 		return success;
+	} else {
+		Log("Invalid IndustryType: "+id);
 	}
 }
 

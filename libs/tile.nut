@@ -1,4 +1,4 @@
-require("./util.nut");
+require("util.nut");
 
 
 class Tile
@@ -7,18 +7,29 @@ class Tile
 }
 
 
+function Tile::CheckTownArea(tile){
+	local result = false;
+
+	local waterTile = GSTile.IsWaterTile(tile);	
+	local coastTile = GSTile.IsCoastTile (tile);
+	local buildable = GSTile.IsBuildable(tile);
+	
+	if (buildable && !waterTile && !coastTile) {
+		result = true;
+	}	
+	return result;
+}
 
 //// Evaluate random tile if its possible to build industry here:
-function Tile::CheckAll(tile, dx, dy){
+function Tile::CheckAll(tile, dx, dy, bufferX, bufferY){
 	local result = false;
 
 	local waterTile = GSTile.IsWaterTile(tile);
 	if (!waterTile) {
-		//evaluate tile is buildbable (not too steep and not a shore tile) and that an area around the tile is buildable.
-		local buildable = GSTile.IsBuildable (tile);
-		local coastTile = GSTile.IsCoastTile (tile);				
+		local buildable = GSTile.IsBuildable(tile);//evaluate tile is buildbable (not too steep and not a shore tile) and that an area around the tile is buildable.
+ 		local coastTile = GSTile.IsCoastTile (tile);				
 		local steepSlope = GSTile.IsSteepSlope(GSTile.GetSlope(tile));
-		local buildableRectangle = GSTile.IsBuildableRectangle(tile, dx+10, dy+10); //A buffer is added to dx and dy to ensure that raising the landscape wont accidently happen too close to other already placed industries or a city.
+		local buildableRectangle = GSTile.IsBuildableRectangle(tile, dx+bufferX, dy+bufferY); //A buffer is added to dx and dy to ensure that raising the landscape wont accidently happen too close to other already placed industries or a city.
 
 		//Jeg kan ikke finde en metode som checker at vi rent faktisk KAN level før vi prøver =(
 
@@ -45,7 +56,7 @@ function Tile::LevelTiles(current, dx, dy)
 	local startTileY = GSMap.GetTileY(current);
 
 	local endTile = GSMap.GetTileIndex(startTileX+dx,startTileY+dy);
-	
+
 	enum ExpensesType {EXPENSES_CONSTRUCTION = 1};
 
 	//local balance = GSCompany.GetBankBalance(0); 

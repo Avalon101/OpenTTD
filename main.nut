@@ -87,11 +87,13 @@ function Builder::RunOnce(){
 		//Function responsible for all things cencerning placement of water industies on the map.
 		foreach(i,v in indu.water) this.MakeIndustries(GSIndustryType.GetName(v["id"]), v["no"], v["dx"],	v["dy"], v["id"],false);
 
-		//Placing industry signs
-		
 		//foreach(i,v in indu.norm) this.SetSigns(GSIndustryType.GetName(v["id"]), v["no"], v["dx"], v["dy"], v["id"]); // Signing all normal industries
 		//foreach(i,v in indu.water) this.SetSigns(GSIndustryType.GetName(v["id"]), v["no"], v["dx"], v["dy"], v["id"], false); // Signing all sea industries
+		//Placing industry signs
 		this.SetTownSigns();
+
+		//Placing industries in towns:
+		this.placeTownIndustries(indu);
 
 		this.isComplete = true;
 	}
@@ -112,7 +114,7 @@ function Builder::MakeTowns()
 					local new_name = p + " - " + town_name;
 					GSTown.SetName(town_id,new_name);
 					// Add the city to the town index reference on the players city
-					Log(town_id);
+					Log("town id: "+town_id+"- Town Name: "+new_name);
 					this.players[p-1].AddTown(town_id);
 
 					Log("Town " + new_name + " founded at location " + tile);
@@ -130,8 +132,8 @@ function Builder::SetTownSigns()
 	for(local p=1; p<=this.gPlayers; p++){
 		local ilist_temp = Industries().town;
 		// Remove Recycle depot from list (idx 0) and set Recycle depot sign in all towns
-		Log(ilist_temp[0]["id"]);
-		ilist_temp.remove(0);
+		Log("ilist_temp:" +ilist_temp[0]["id"]);
+		//ilist_temp.remove(0);
 		local ptown_tables = this.players[p-1].towns;
 		foreach(i,town in ptown_tables){
 			local tile = GSTown.GetLocation(town["town_id"]);
@@ -177,6 +179,8 @@ function Builder::MakeIndustries(text, amount, dx, dy, id, isLandTile){
 		{
 			for(local n=1; n<=this.gPlayers; n++){
 				local industryPlaced = false;
+				local bufferX = 10;
+				local bufferY = 10;
 				do{
 					Log("Trying to place: "+text);
 					do{
@@ -184,7 +188,7 @@ function Builder::MakeIndustries(text, amount, dx, dy, id, isLandTile){
 						tile = Tile().DrawRandomTile(isLandTile);
 					//a fuction that evaluates the tile is ok in all ways before moving on.				
 					}
-					while(!(Tile.CheckAll(tile, dx, dy)));	
+					while(!(Tile.CheckAll(tile, dx, dy, bufferX, bufferY)));	
 
 					//level an area around a tile equal to industry size (NOTE: this funcion returns true even if only a few tiles was leveled!)
 					local tilesSucessfullyLeveled = Tile().LevelTiles(tile, dx, dy);
@@ -192,12 +196,130 @@ function Builder::MakeIndustries(text, amount, dx, dy, id, isLandTile){
 					//place industry		
 					local industryBuildable = GSIndustryType.CanBuildIndustry(id);		
 					if (industryBuildable) {
-							industryPlaced = Util().PlaceIndustry(id, tile);
+						industryPlaced = Util().PlaceIndustry(id, tile);
 					}
 				}while(!industryPlaced);
 			//set sign	
 			local signText = n+" - "+text;	
 			Util.SetSign(signText, tile);
 			}
+		}	
+}
+
+function Builder::placeTownIndustries(indu){
+	for(local p=1; p<=this.gPlayers; p++){
+		local ptown_tables = this.players[p-1].towns;
+		foreach(i, town_id in ptown_tables){
+			Log ("-------------NEW TOWN--------------");
+			local townId = town_id["town_id"];
+			foreach(j, industryId in ptown_tables[i].industries){
+				Log ("-------------NEW INDUSTRY--------------");
+				Log ("town itteration number: "+i);
+				Log ("industry itteration number: "+j);
+				Log ("industryId: "+industryId);
+				Log("Town list length: "+ptown_tables.len());
+
+				local townTile = GSTown.GetLocation(townId);
+				Log ("townId: "+townId);
+
+				//Create a small search grid of tiles aound the town in context:
+				local townGridList = Util.createSearchGrid(townTile);
+				
+				//Create the allowed industry placement area around the town in context:
+				local townIndustryPlacementArrayList = Util.GetTownIndustryPlacementArray(townGridList, townId, industryId);
+
+				//get the size of the Industry in context from town list. (Omkriv koden!)
+				//-----------------------------------------------
+				local deltaXYList = [];
+				foreach(i,v in indu.town){
+					if(v["id"]==industryId){
+						deltaXYList.append({dx=v["dx"], dy=v["dy"]});
+						break;
+					}
+				}
+				
+				local dx = null;
+				local dy = null;
+				foreach(i,v in deltaXYList){
+					dx = v["dx"];
+					dy = v["dy"];
+				}
+				
+				Log("dx: "+dx);
+				Log("dy: "+dy);
+				Log("townIndustryPlacementArrayList length: "+townIndustryPlacementArrayList.len());
+				//-----------------------------------------------
+				
+				//pick a random tile within the towns placement area and test if an industry can be build on that tile.
+				local randomTile = null;
+				local industryPlaced = false;
+				local j = 0;
+				//The outer loop evaluates if the industry in context has been build upon the selected tile.
+				do {	
+					j=j+1;	
+					//the inner loop checks if the randomly selected tile within the towns placement area is buildable acording to a few rules.
+					do {
+						local randomTileIndex = GSBase.RandRange(townIndustryPlacementArrayList.len());
+						randomTile = townIndustryPlacementArrayList[randomTileIndex];
+					//	randomTile = townIndustryPlacementArrayList.pop();
+						//Log("Industry Id= "+industryId);
+						//Log("Town name: "+townId);
+						Log("townTileX:"+townTileX);
+						Log("townTileY:"+townTileY);
+						Log("randomTileX: "+GSMap.GetTileX(randomTile));
+						Log("randomTileY: "+GSMap.GetTileY(randomTile));
+
+						//x og y coordinates are move a distance equal to the aize of the industry in context)
+						local tileX = GSMap.GetTileX(randomTile);
+						local tileY = GSMap.GetTileY(randomTile);
+
+						local xOffset = Util().TownAreaOffset(tileX,townTileX);
+						local yOffset = Util().TownAreaOffset(tileY,townTileY);
+						
+						if (xOffset){
+							tileX = tileX-dx;
+							//Log("offset X");
+						}
+						if (yOffset){
+							tileY = tileY-dy;
+							//Log("offset Y");
+						}
+						randomTile = GSMap.GetTileIndex(tileX, tileY);
+						Log("randomTile X has been ofset tile by: "+dx);
+						Log("randomTile Y has been ofset tile by: "+dy);
+					}
+					while(!Tile().CheckTownArea(randomTile));
+
+					//level an area around a tile equal to industry size (NOTE: this funcion returns true even if only a few tiles was leveled!)
+					local tilesSucessfullyLeveled = Tile().LevelTiles(randomTile, dx, dy);					
+					//Log("tile was leveled: "+tilesSucessfullyLeveled);
+
+					local industryBuildable = GSIndustryType.CanBuildIndustry(industryId);
+					//We are curently not placing junk yards (id=24), thus we force the check to evaluate true.
+					if(industryId==24){
+						industryPlaced = true;
+					} else if(industryBuildable) {
+						//place industry:
+						industryPlaced = Util().PlaceIndustry(industryId, randomTile);
+					} else {
+						E("Industry is not buildable: "+industryId);
+					}
+
+					//if the randomly selected tile for 50 itterations was useless we expand the town to increase the area of influence a little and update the town industry placement array.
+					//Then the loop runs all over again.
+					if (j==50 && !industryPlaced) {
+						j=0;
+						local townExapanded = GSTown.ExpandTown(townId, 2); //town is expanded by 2 houses.
+						Log ("Town has been expanded!");
+						townIndustryPlacementArrayList = Util.GetTownIndustryPlacementArray(townGridList, townId, industryId);
+					}	
+				}while(!industryPlaced);
+				
+				//set industry sign
+				local text = GSIndustryType.GetName(industryId);
+				local signText = p+" - "+text;	
+				Util.SetSign(signText, randomTile);
+			}
 		}
+	}
 }
