@@ -25,7 +25,7 @@ INDUSTRY <- {
 				Forest = {no = 8, dx = 0, dy = 0, ltype = 0, id = 12},
 				FruitPlantation = {no = 20, dx = 0, dy = 0, ltype = 0, id = 29},
 				FurnitureFactory = {no = 3, dx = 5, dy = 3, ltype = 2, id = 13},
-				GasStation = {no = 3, dx = 2, dy = 2, ltype = 2, id = 47},
+				GasStation = {no = 3, dx = 0, dy = 0, ltype = 2, id = 47},
 				GlassWorks = {no = 3, dx = 4, dy = 4, ltype = 0, id = 21},
 				GrainMill = {no = 4, dx = 3, dy = 2, ltype = 2, id = 32},
 				//HardwareStore = {no = 3, dx = 1, dy = 1, ltype = 3, id = 44},
