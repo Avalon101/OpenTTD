@@ -27,12 +27,12 @@ class Builder extends GSInfo {
 				custom_value = 15,
 				flags = CONFIG_NONE, min_value = 1, max_value = 100, step_size = 1 });
 		AddSetting({ name = "max_town_industries",
-				description = "Maxmimum number of industries per town:",
+				description = "Maxmimum number of random industries per town:",
 				easy_value = 4,
 				medium_value = 4,
 				hard_value = 4,
-				custom_value = 6,
-				flags = CONFIG_NONE, min_value = 1, max_value = 15, step_size = 1 });
+				custom_value = 7,
+				flags = CONFIG_NONE, min_value = 6, max_value = 15, step_size = 1 });
   }
 }
 

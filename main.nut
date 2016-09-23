@@ -81,14 +81,12 @@ function Builder::RunOnce(){
 		this.MakeTowns();
 
 		local indu = Industries();
-		//Function responsible for all things cencerning placement of land industies on the map.
+		//// Function responsible for all things cencerning placement of land industies on the map.
 		foreach(i,v in indu.norm) this.MakeIndustries(GSIndustryType.GetName(v["id"]), v["no"], v["dx"], v["dy"], v["id"], true); 
 
-		//Function responsible for all things cencerning placement of water industies on the map.
+		//// Function responsible for all things cencerning placement of water industies on the map.
 		foreach(i,v in indu.water) this.MakeIndustries(GSIndustryType.GetName(v["id"]), v["no"], v["dx"],	v["dy"], v["id"],false);
 
-		//foreach(i,v in indu.norm) this.SetSigns(GSIndustryType.GetName(v["id"]), v["no"], v["dx"], v["dy"], v["id"]); // Signing all normal industries
-		//foreach(i,v in indu.water) this.SetSigns(GSIndustryType.GetName(v["id"]), v["no"], v["dx"], v["dy"], v["id"], false); // Signing all sea industries
 		//Placing industry signs
 		this.SetTownSigns();
 
@@ -105,22 +103,28 @@ function Builder::MakeTowns()
 		for(local p=1; p<=this.gPlayers; p++){	// cycle through players
 			local isTownFounded = false;
 			while (!isTownFounded) {
-				local tile = Tile().RandLand();
-				if (GSTown.FoundTown(tile, 0, false, 1, 0))
-				{
-					// Assigning player number to town name
-					local town_id = GSTown.GetTownCount()-1;
-					local town_name = this.gTownNames.pop(); //Rename from custom town names list
-					local new_name = p + " - " + town_name;
-					GSTown.SetName(town_id,new_name);
-					// Add the city to the town index reference on the players city
-					Log("town id: "+town_id+"- Town Name: "+new_name);
-					this.players[p-1].AddTown(town_id);
+				local tile = Tile().RandLand();		// Find random tile
+				local closestTown = GSTile.GetClosestTown(tile); // Find id of closest town
+				local distanceTownToTile = GSTown.GetDistanceManhattanToTile(closestTown, tile); // Get manhattan distance between tile and town
+				Log("distance from " + tile + " to " + "town " + closestTown + ": " + distanceTownToTile);
+				if (distanceTownToTile > 49){
+					if (GSTown.FoundTown(tile, 0, false, 1, 0))
+					{
+						// Assigning player number to town name
+						local town_id = GSTown.GetTownCount()-1;
+						local town_name = this.gTownNames.pop(); //Rename from custom town names list
+						local new_name = p + " - " + town_name;
+						GSTown.SetName(town_id,new_name);
+						// Add the city to the town index reference on the players city
+						Log(town_id);
+						this.players[p-1].AddTown(town_id);
 
-					Log("Town " + new_name + " founded at location " + tile);
-					break;
+						Log("Town " + new_name + " founded at location " + tile);
+						isTownFounded = true;
+					}
+					else {E("Town not founded at location " + tile + ", trying new location...");}
 				}
-				else {E("Town not founded at location " + tile + ", trying new location...");}
+				else {E("Too close to another town");}
 			}
 		}
 	}
@@ -132,13 +136,13 @@ function Builder::SetTownSigns()
 	for(local p=1; p<=this.gPlayers; p++){
 		local ilist_temp = Industries().town;
 		// Remove Recycle depot from list (idx 0) and set Recycle depot sign in all towns
-		Log("ilist_temp:" +ilist_temp[0]["id"]);
-		//ilist_temp.remove(0);
+		ilist_temp.remove(0);
 		local ptown_tables = this.players[p-1].towns;
 		foreach(i,town in ptown_tables){
 			local tile = GSTown.GetLocation(town["town_id"]);
 			local text = "Town - Recycling Depot";
 			Util.SetSign(text, tile);
+			ptown_tables[i].industries.append(23);
 		}
 		// For each industry, pull random town belonging to player and sign that industry to the city.
 		// Subtract 1 from the  count in ilist_temp for that industry.
@@ -157,7 +161,7 @@ function Builder::SetTownSigns()
 						ptown_tables[rand_idx].industries.append(current_industry["id"]);	// adds industry to town to keep track of industries in every town
 						this.players[p-1].towns = ptown_tables;				// update the town industry list for this current player
 						local tile = GSTown.GetLocation(ptown_tables[rand_idx].town_id);	// plant sign
-						tile = Tile().Neighbour(tile,ptown_tables[rand_idx].industries.len(), ptown_tables[rand_idx].industries.len());
+						tile = Tile().Neighbour(tile,ptown_tables[rand_idx].industries.len()-1, ptown_tables[rand_idx].industries.len()-1);
 						local text = "Town - " + GSIndustryType.GetName(current_industry["id"]);	// plant sign
 						Util.SetSign(text, tile);	// plant sign
 						current_industry["no"]--;	// subtract from counter, so we only put desired amount of this industry on the map
@@ -166,7 +170,12 @@ function Builder::SetTownSigns()
 			}
 		}
 		Log("Player"+p+" has towns: "+ ptown_tables.len());
-		foreach(i,table in ptown_tables) Log(GSTown.GetName(table["town_id"]) + " has " + (table.industries.len()+1)  + " industries");
+		foreach(i,table in ptown_tables) {
+			Log(GSTown.GetName(table["town_id"]) + " has " + (table.industries.len())  + " industries");
+			foreach(i,industry in table.industries) {
+				Log(GSIndustryType.GetName(industry));
+			}
+		}
 	}
 	return;
 }
