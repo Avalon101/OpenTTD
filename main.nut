@@ -204,7 +204,7 @@ function Builder::MakeIndustries(text, amount, dx, dy, id, isLandTile){
 
 					//place industry							
 					local industryBuildable = GSIndustryType.CanBuildIndustry(id);
-					if(id==24){
+					if(id==24 || id==20){
 						industryPlaced = true;
 					} else if (industryBuildable) {
 						industryPlaced = Util().PlaceIndustry(id, tile);
@@ -234,8 +234,8 @@ function Builder::placeTownIndustries(indu){
 				Log ("townId: "+townId);
 
 				//Create a small search grid of tiles aound the town in context:
-				local townTileX = GSMap.GetTileX(townTile)-1;
-				local townTileY = GSMap.GetTileY(townTile)-1;
+				local townTileX = GSMap.GetTileX(townTile);
+				local townTileY = GSMap.GetTileY(townTile);
 				Log("townTileX:"+townTileX);
 				Log("townTileY:"+townTileY);				
 				local townGridList = Util.CreateSearchGrid(townTileX, townTileY);
