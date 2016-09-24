@@ -274,6 +274,7 @@ function Builder::placeTownIndustries(indu){
 					do {
 						local randomTileIndex = GSBase.RandRange(townIndustryPlacementArrayList.len());
 						if (industryId == 47 || industryId == 23){
+							//FIXME: tilføj et kald til Util.Randomize før du kalder pop
 							randomTile = townIndustryPlacementArrayList.pop();
 						} else {
 							randomTile = townIndustryPlacementArrayList[randomTileIndex];
@@ -306,7 +307,7 @@ function Builder::placeTownIndustries(indu){
 						Log("randomTile Y has been ofset tile by: "+dy);
 
 						if (!Tile().CheckTownArea(randomTile) && townIndustryPlacementArrayList.len() == 0) {
-							local townExapanded = GSTown.ExpandTown(townId, 2); //town is expanded by 2 houses.
+							local townExpanded = GSTown.ExpandTown(townId, 2); //town is expanded by 2 houses.
 							Log ("Town has been expanded!");
 							townIndustryPlacementArrayList = Util.GetTownIndustryPlacementArray(townGridList, townId, industryId);
 						}	
@@ -331,7 +332,7 @@ function Builder::placeTownIndustries(indu){
 					if (industryId == 47 || industryId == 23){
 						Log("townIndustryPlacementArrayList length =" +townIndustryPlacementArrayList.len());
 						if (!industryPlaced && townIndustryPlacementArrayList.len() == 0) {
-							local townExapanded = GSTown.ExpandTown(townId, 2); //town is expanded by 2 houses.
+							local townExpanded = GSTown.ExpandTown(townId, 2); //town is expanded by 2 houses.
 							Log ("Town has been expanded!");
 							townIndustryPlacementArrayList = Util.GetTownIndustryPlacementArray(townGridList, townId, industryId);
 						}	
