@@ -11,7 +11,7 @@ INDUSTRY <- {
 				Biorefinery = {no = 1, dx = 5, dy = 5, ltype = 0, id = 43},
 				Brewery = {no = 3, dx = 3, dy = 2, ltype = 2, id = 33},
 				BrickWorks = {no = 3, dx = 5, dy = 5, ltype = 0, id = 42},
-				//BuildersYard = {no = 3, dx = 2, dy = 2, ltype = 2, id = 48},
+				BuildersYard = {no = 3, dx = 2, dy = 2, ltype = 2, id = 48},
 				CementPlant	= {no = 3, dx = 7, dy = 7, ltype = 0, id = 40},
 				ClayPit	= {no = 10, dx = 9, dy = 5, ltype = 0, id = 41},
 				CoalMine = {no = 10, dx = 3, dy = 4, ltype = 0, id = 0},
@@ -21,17 +21,17 @@ INDUSTRY <- {
 				FertilizerPlant = {no = 1, dx = 7, dy = 7, ltype = 0, id = 37},
 				FishingGrounds = {no = 6, dx = 7, dy = 7, ltype = 1, id = 31},
 				//FishingHarbor = {no = 4, dx = 0, dy = 0, ltype = 4, id = 30},
-				//FoodMarket = {no = 3, dx = 1, dy = 1, ltype = 3, id = 46},
+				FoodMarket = {no = 3, dx = 1, dy = 1, ltype = 3, id = 46},
 				Forest = {no = 8, dx = 0, dy = 0, ltype = 0, id = 12},
 				FruitPlantation = {no = 20, dx = 0, dy = 0, ltype = 0, id = 29},
 				FurnitureFactory = {no = 3, dx = 5, dy = 3, ltype = 2, id = 13},
 				GasStation = {no = 3, dx = 0, dy = 0, ltype = 2, id = 47},
 				GlassWorks = {no = 3, dx = 4, dy = 4, ltype = 0, id = 21},
 				GrainMill = {no = 4, dx = 3, dy = 2, ltype = 2, id = 32},
-				//HardwareStore = {no = 3, dx = 1, dy = 1, ltype = 3, id = 44},
+				HardwareStore = {no = 3, dx = 1, dy = 1, ltype = 3, id = 44},
 				Hotel = {no = 3, dx = 2, dy = 2, ltype = 2, id = 45},
 				IronOreMine = {no = 8, dx = 4, dy = 4, ltype = 0, id = 18},
-				//IronWorks = {no = 1, dx = 3, dy = 3, ltype = 0, id = 20},
+				IronWorks = {no = 1, dx = 3, dy = 3, ltype = 0, id = 20},
 				JunkYard = {no = 6, dx = 0, dy = 0, ltype = 0, id = 24},
 				LimeKiln = {no = 1, dx = 3, dy = 4, ltype = 0, id = 1},
 				LumberYard = {no = 1, dx = 5, dy = 5, ltype = 0, id = 38},
@@ -40,7 +40,7 @@ INDUSTRY <- {
 				MetalWorkshop = {no = 3, dx = 4, dy = 5, ltype = 0, id = 10},
 				MixedFarm = {no = 12, dx = 0, dy = 0, ltype = 0, id = 28},
 				OilRefinery	= {no = 1, dx = 4, dy = 5, ltype = 0, id = 4},
-				OilRig = {no = 5, dx = 11, dy = 11, ltype = 1, id = 5}, //speciel positioning
+				OilRig = {no = 5, dx = 11, dy = 11, ltype = 1, id = 5},
 				OilWells = {no = 5, dx = 0, dy = 0, ltype = 0, id = 15},
 				PaperMill = {no = 3, dx = 0, dy = 0, ltype = 0, id = 14},
 				PlasticsPlant = {no = 3, dx = 5, dy = 5, ltype = 0, id = 16},
@@ -54,6 +54,7 @@ INDUSTRY <- {
 				Stockyard = {no = 3, dx = 5, dy = 4, ltype = 2, id = 35},
 				SugarRefinery = {no = 4, dx = 4, dy = 3, ltype = 2, id = 17},
 				TextileMill = {no = 4, dx = 5, dy = 4, ltype = 2, id = 39},
+				
 };
 
 TEST <- { 

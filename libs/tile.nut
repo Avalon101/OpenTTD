@@ -12,10 +12,12 @@ function Tile::CheckTownArea(tile){
 
 	local waterTile = GSTile.IsWaterTile(tile);	
 	local coastTile = GSTile.IsCoastTile (tile);
-	local buildable = GSTile.IsBuildable(tile);
-	//FIXME: tilføj check på om tile er i niveau 0!
-	
-	if (buildable && !waterTile && !coastTile) {
+	local buildable = GSTile.IsBuildable(tile);	
+	local waterlevel = false;
+	if (GSTile.GetMinHeight(tile) == 0) {
+	waterlevel = true;
+	}	
+	if (buildable && !waterTile && !coastTile && !waterlevel) {
 		result = true;
 	}	
 	return result;
@@ -29,13 +31,16 @@ function Tile::CheckAll(tile, dx, dy, bufferX, bufferY){
 	if (!waterTile) {
 		local buildable = GSTile.IsBuildable(tile);//evaluate tile is buildbable (not too steep and not a shore tile) and that an area around the tile is buildable.
  		local coastTile = GSTile.IsCoastTile (tile);
- 		//FIXME: tilføj check på om tile er i niveau 0!
+ 		local waterlevel = false;
+ 		if (GSTile.GetMinHeight(tile) == 0) {
+			waterlevel = true;
+ 		}
 		local steepSlope = GSTile.IsSteepSlope(GSTile.GetSlope(tile));
 		local buildableRectangle = GSTile.IsBuildableRectangle(tile, dx+bufferX, dy+bufferY); //A buffer is added to dx and dy to ensure that raising the landscape wont accidently happen too close to other already placed industries or a city.
 
 		//Jeg kan ikke finde en metode som checker at vi rent faktisk KAN level før vi prøver =(
 
-		if (buildable && buildableRectangle && !coastTile && !steepSlope){
+		if (buildable && buildableRectangle && !coastTile && !steepSlope && !waterlevel){
 			result = true;
 		}	
 	} else {

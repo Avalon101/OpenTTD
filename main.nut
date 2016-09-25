@@ -156,6 +156,10 @@ function Builder::SetTownSigns()
 					local its_a_dupe = false;
 					foreach(i,indu_id in ptown_tables[rand_idx].industries){ // cylces industries already in town
 						if(current_industry["id"] == indu_id) its_a_dupe = true;	// check if industry already exists in town.
+						if(current_industry["id"] == 47 && indu_id == 45) its_a_dupe = true; // check that the town does not allready have a hotel if we are placing a petrol station.
+						if(current_industry["id"] == 32 && indu_id == 33) its_a_dupe = true; // check that the town does not allready have a Brewery if we are placing a Grain Mill.
+						if(current_industry["id"] == 46 && (indu_id == 47 || indu_id == 45)) its_a_dupe = true; // check that the town does not allready have a hotel or a gas station if we are placing a Food market.
+						if(current_industry["id"] == 44 && (indu_id == 48 || indu_id == 47)) its_a_dupe = true; // check that the town does not allready have a builders yard or a gas station if we are placing a Hardware store.
 					}
 					if (its_a_dupe==false){		// if industry not already in town, add industry to town
 						ptown_tables[rand_idx].industries.append(current_industry["id"]);	// adds industry to town to keep track of industries in every town
@@ -274,7 +278,7 @@ function Builder::placeTownIndustries(indu){
 					do {
 						local randomTileIndex = GSBase.RandRange(townIndustryPlacementArrayList.len());
 						if (industryId == 47 || industryId == 23){
-							//FIXME: tilføj et kald til Util.Randomize før du kalder pop
+							townIndustryPlacementArrayList = Util.Randomize(townIndustryPlacementArrayList);
 							randomTile = townIndustryPlacementArrayList.pop();
 						} else {
 							randomTile = townIndustryPlacementArrayList[randomTileIndex];
@@ -309,6 +313,10 @@ function Builder::placeTownIndustries(indu){
 						if (!Tile().CheckTownArea(randomTile) && townIndustryPlacementArrayList.len() == 0) {
 							local townExpanded = GSTown.ExpandTown(townId, 2); //town is expanded by 2 houses.
 							Log ("Town has been expanded!");
+							if (GSTown.GetHouseCount(townId) > 10){
+								E("town nr "+townId+" has grown too large ! - build map again =(");
+								assert(false);
+							}
 							townIndustryPlacementArrayList = Util.GetTownIndustryPlacementArray(townGridList, townId, industryId);
 						}	
 					}
@@ -334,6 +342,10 @@ function Builder::placeTownIndustries(indu){
 						if (!industryPlaced && townIndustryPlacementArrayList.len() == 0) {
 							local townExpanded = GSTown.ExpandTown(townId, 2); //town is expanded by 2 houses.
 							Log ("Town has been expanded!");
+							if (GSTown.GetHouseCount(townId) > 10){
+								E("town nr "+townId+" has grown too large ! - build map again =(");
+								assert(false);
+							}
 							townIndustryPlacementArrayList = Util.GetTownIndustryPlacementArray(townGridList, townId, industryId);
 						}	
 					}
