@@ -12,12 +12,13 @@ function Tile::CheckTownArea(tile){
 
 	local waterTile = GSTile.IsWaterTile(tile);	
 	local coastTile = GSTile.IsCoastTile (tile);
-	local buildable = GSTile.IsBuildable(tile);	
+	//local buildable = GSTile.IsBuildable(tile);	
 	local waterlevel = false;
 	if (GSTile.GetMinHeight(tile) == 0) {
 	waterlevel = true;
 	}	
-	if (buildable && !waterTile && !coastTile && !waterlevel) {
+	//if (buildable && !waterTile && !coastTile && !waterlevel) {
+	if (!waterTile && !coastTile && !waterlevel) {
 		result = true;
 	}	
 	return result;
@@ -61,7 +62,6 @@ function Tile::LevelTiles(current, dx, dy)
 {
 	local startTileX = GSMap.GetTileX(current);
 	local startTileY = GSMap.GetTileY(current);
-
 	local endTile = GSMap.GetTileIndex(startTileX+dx,startTileY+dy);
 
 	enum ExpensesType {EXPENSES_CONSTRUCTION = 1};
