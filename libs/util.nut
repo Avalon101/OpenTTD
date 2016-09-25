@@ -13,14 +13,23 @@ class Util
 function Util::IndustryCheck(current_industry, indu_id)
 {	
 	local industryCheck = false;
-	if(current_industry["id"] == 32 && indu_id == 33) industryCheck = true; // check that the town does not allready have a Brewery if we are placing a Grain Mill.
-	if(current_industry["id"] == 33 && indu_id == 32) industryCheck = true; // check that the town does not allready have a Grain Mill if we are placing a Brewery.
-	if(current_industry["id"] == 42 && indu_id == 44) industryCheck = true; // check that the town does not allready have a Grain Mill if we are placing a Brewery.
-	if(current_industry["id"] == 45 && (indu_id == 46 || indu_id == 47)) industryCheck = true; // check that the town does not allready have a Food Market yard or a gas station if we are placing a Hotel.
-	if(current_industry["id"] == 46 && (indu_id == 47 || indu_id == 45)) industryCheck = true; // check that the town does not allready have a hotel or a gas station if we are placing a Food market.
-	if(current_industry["id"] == 47 && (indu_id == 44 || indu_id == 45 || indu_id == 46 || indu_id == 48)) industryCheck = true; // check that the town does not allready have a Food Market yard or a Hotel if we are placing a gas station.
-	if(current_industry["id"] == 44 && (indu_id == 48 || indu_id == 47 || indu_id == 42)) industryCheck = true; // check that the town does not allready have a builders yard or a gas station if we are placing a Hardware store.
-	if(current_industry["id"] == 48 && (indu_id == 47 || indu_id == 44)) industryCheck = true; // check that the town does not allready have a Hardware Store if we are placing a Builders Yard.
+	//GrainMill (32)
+	//Brewery (33)
+	//HardwareStore (44)
+	//Hotel (45)
+	//FoodMarket (46)
+	//GasStation (47)
+	//BuildersYard (48)
+
+	
+	if(current_industry["id"] == 32 && indu_id == 33) industryCheck = true; //Placing: GrainMill - not possible if town has: Brewery
+	if(current_industry["id"] == 33 && indu_id == 32) industryCheck = true; //Placing: Brewery - not possible if town has: GrainMill
+
+	if(current_industry["id"] == 45 && (indu_id == 46 || indu_id == 47)) industryCheck = true; //Placing: Hotel - not possible if town has: FoodMarket OR GasStation 
+	if(current_industry["id"] == 46 && (indu_id == 47 || indu_id == 45)) industryCheck = true; //Placing: FoodMarket - not possible if town has: GasStation OR Hotel
+	if(current_industry["id"] == 47 && (indu_id == 44 || indu_id == 45 || indu_id == 46)) industryCheck = true; //Placing: GasStation - not possible if town has: HardwareStore / Hotel / FoodMarket / BuildersYard
+	if(current_industry["id"] == 44 && (indu_id == 48 || indu_id == 47)) industryCheck = true; //Placing: HardwareStore - not possible if town has: BuildersYard / GasStation
+	if(current_industry["id"] == 48 && (indu_id == 47 || indu_id == 44)) industryCheck = true; //Placing: BuildersYard - not possible if town has: GasStation / HardwareStore
 	return industryCheck;
 }
 
