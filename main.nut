@@ -41,6 +41,7 @@ function Builder::Start()
 		//GSGame.Pause();			//Pause game while GS is building the map.
 		this.Init();		// running some basic settings and other necessary stuff.. dont change this.
 		this.RunOnce();		// Building the towns and industries, assigning evenly between players. (the actual things we want to make with this script)
+		Util.MoneySetBalance(100000); //reset money to starting balance in case it has change during script.
 		//GSGame.Unpause();
 	}
 	else if (this.isComplete == true) Log("Script has already been run!");
@@ -78,20 +79,20 @@ function Builder::Load(version, data)
 function Builder::RunOnce(){
 	while(!this.isComplete){
 		// Make all towns for all players
-		///this.MakeTowns();
+		this.MakeTowns();
 
 		local indu = Industries();
 		//// Function responsible for all things cencerning placement of land industies on the map.
 		foreach(i,v in indu.norm) this.MakeIndustries(GSIndustryType.GetName(v["id"]), v["no"], v["dx"], v["dy"], v["id"], true); 
 
 		//// Function responsible for all things cencerning placement of water industies on the map.
-		///foreach(i,v in indu.water) this.MakeIndustries(GSIndustryType.GetName(v["id"]), v["no"], v["dx"], v["dy"], v["id"],false);
+		foreach(i,v in indu.water) this.MakeIndustries(GSIndustryType.GetName(v["id"]), v["no"], v["dx"], v["dy"], v["id"],false);
 
 		//Placing industry signs
-		///this.SetTownSigns();
+		this.SetTownSigns();
 
 		//Placing industries in towns:
-		///this.placeTownIndustries(indu);
+		this.placeTownIndustries(indu);
 
 		this.isComplete = true;
 	}
@@ -206,9 +207,9 @@ function Builder::MakeIndustries(text, amount, dx, dy, id, isLandTile){
 
 					//place industry							
 					local industryBuildable = GSIndustryType.CanBuildIndustry(id);
-					if(/*id==24 || */id==20){
+					/*if(id==24 || id==20){			// overflødig, fixed i grf.
 						industryPlaced = true;
-					} else if (industryBuildable) {
+					} else */ if (industryBuildable) {
 						industryPlaced = Util().PlaceIndustry(id, tile);
 					}
 				}while(!industryPlaced);
@@ -281,8 +282,8 @@ function Builder::placeTownIndustries(indu){
 						} else {
 							randomTile = townIndustryPlacementArrayList[randomTileIndex];
 						}
-						//Log("Industry Id= "+industryId);
-						//Log("Town name: "+townId);
+						Log("Industry Id= "+GSIndustryType.GetName(industryId));
+						Log("Town name: "+GSTown.GetName(townId));
 
 						Log("townTileX:"+townTileX);
 						Log("townTileY:"+townTileY);
