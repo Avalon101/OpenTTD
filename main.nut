@@ -154,12 +154,12 @@ function Builder::SetTownSigns()
 
 				if(ptown_tables[rand_idx].industries.len() < this.gTownIndustries){ // check if town has max number of industries already
 					local its_a_dupe = false;
-					local industryCheck = false;
+					//local industryCheck = false;
 					foreach(i,indu_id in ptown_tables[rand_idx].industries){ // cylces industries already in town
 						if(current_industry["id"] == indu_id) its_a_dupe = true;	// check if industry already exists in town.
-						industryCheck = Util.IndustryCheck(current_industry, indu_id);
+						//industryCheck = Util.IndustryCheck(current_industry, indu_id);
 					}
-					if (its_a_dupe==false && industryCheck==!true){		// if industry not already in town, add industry to town
+					if (its_a_dupe==false /*&& industryCheck==!true*/){		// if industry not already in town, add industry to town
 						ptown_tables[rand_idx].industries.append(current_industry["id"]);	// adds industry to town to keep track of industries in every town
 						this.players[p-1].towns = ptown_tables;				// update the town industry list for this current player
 						local tile = GSTown.GetLocation(ptown_tables[rand_idx].town_id);	// plant sign
