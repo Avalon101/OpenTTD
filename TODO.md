@@ -7,7 +7,7 @@ Todo:
  - [ ] Forge bliver ikke placeret endnu
 
 
-
+Fixed Stuff
   - [x] Iron Works bliver ikke placeret endnu
   - [x] Opdater fredningsområdet knyttet til de enkelte industrier.
   - [x] Lav en GRF der kan nedjustere produktion for industrier.
