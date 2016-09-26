@@ -4,12 +4,11 @@ Todo:
 
  - [ ] Gas Station bliver ikke placeret endnu
  - [ ] Havnen bliver ikke placeret endnu 
- - [ ] Iron Works bliver ikke placeret endnu 
  - [ ] Forge bliver ikke placeret endnu
 
 
 
-
+  - [x] Iron Works bliver ikke placeret endnu
   - [x] Opdater fredningsområdet knyttet til de enkelte industrier.
   - [x] Lav en GRF der kan nedjustere produktion for industrier.
   - [x] Placer industrier i byerne.
