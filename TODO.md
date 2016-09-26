@@ -1,6 +1,6 @@
 Todo:
 - - Source code for FIRS 0.7.5 er fundet og lagt op her: https://github.com/funkyL/FIRS-0.7.5. Det kan helt sikkert lade sig gøre at ændre de ting vi kan tænke os med production. Desuden kan man nok ved at læse koden, gennemskue hvorfor der er udfordringer med visse industrier, tror de er defineret i GRF'en. Undersøg nærmere.
-
+<br>
  - [ ] Gas Station bliver ikke placeret endnu
  - [ ] Havnen bliver ikke placeret endnu 
  - [ ] Iron Works bliver ikke placeret endnu 
