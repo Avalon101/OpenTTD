@@ -166,7 +166,7 @@ function Builder::SetTownSigns()
 						local tile = GSTown.GetLocation(ptown_tables[rand_idx].town_id);	// plant sign
 						tile = Tile().Neighbour(tile,ptown_tables[rand_idx].industries.len()-1, ptown_tables[rand_idx].industries.len()-1);
 						local text = "Town - " + GSIndustryType.GetName(current_industry["id"]);	// plant sign
-						Util.SetSign(text, tile);	// plant sign
+						//Util.SetSign(text, tile);	// plant sign
 						current_industry["no"]--;	// subtract from counter, so we only put desired amount of this industry on the map
 					}
 				}
