@@ -3,9 +3,9 @@ Todo:
 
 High Priority
  - [ ] Fjern skilte fra byerne der viser hvilke indutrier byen indeholder (NC)
- - [ ] Gas Station bliver ikke placeret endnu (NC)
+ - [ ] Gas Station bliver ikke placeret endnu GRF conditions (NC)
  - [ ] Havnen bliver ikke placeret endnu men overvej om den bare skal ligge tilfældigt på mappet (Kasper)
- - [ ] Forge bliver ikke placeret endnu (NC)
+ - [ ] Forge bliver ikke placeret endnu, GRF conditions (NC)
  - [ ] Add start byen til listen over byer (NC)
 
 
