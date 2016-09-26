@@ -142,7 +142,7 @@ function Builder::SetTownSigns()
 		foreach(i,town in ptown_tables){
 			local tile = GSTown.GetLocation(town["town_id"]);
 			local text = "Town - Recycling Depot";
-			Util.SetSign(text, tile);
+			//Util.SetSign(text, tile);
 			ptown_tables[i].industries.append(23);
 		}
 		// For each industry, pull random town belonging to player and sign that industry to the city.
@@ -194,7 +194,7 @@ function Builder::MakeIndustries(text, amount, dx, dy, id, isLandTile){
 				local bufferX = 10;
 				local bufferY = 10;
 				do{
-					Log("Trying to place: "+text);
+					//Log("Trying to place: "+text);
 					do{
 						//get random tile (also limits the industry placeable area on the map to map size -15 on each axis)
 						tile = Tile().DrawRandomTile(isLandTile);
@@ -228,19 +228,19 @@ function Builder::placeTownIndustries(indu){
 			local townId = town_id["town_id"];
 			foreach(j, industryId in ptown_tables[i].industries){
 				Log ("-------------NEW INDUSTRY--------------");
-				Log ("town itteration number: "+i);
-				Log ("industry itteration number: "+j);
-				Log ("industryId: "+industryId);
-				Log("Town list length: "+ptown_tables.len());
+				//Log ("town itteration number: "+i);
+				//Log ("industry itteration number: "+j);
+				//Log ("industryId: "+industryId);
+				//Log("Town list length: "+ptown_tables.len());
 
 				local townTile = GSTown.GetLocation(townId);
-				Log ("townId: "+townId);
+				//Log ("townId: "+townId);
 
 				//Create a small search grid of tiles aound the town in context:
 				local townTileX = GSMap.GetTileX(townTile);
 				local townTileY = GSMap.GetTileY(townTile);
-				Log("townTileX:"+townTileX);
-				Log("townTileY:"+townTileY);				
+				//Log("townTileX:"+townTileX);
+				//Log("townTileY:"+townTileY);				
 				local townGridList = Util.CreateSearchGrid(townTileX, townTileY);
 				
 				//Create the allowed industry placement area around the town in context:
@@ -263,9 +263,9 @@ function Builder::placeTownIndustries(indu){
 					dy = v["dy"];
 				}
 				
-				Log("dx: "+dx);
-				Log("dy: "+dy);
-				Log("townIndustryPlacementArrayList length: "+townIndustryPlacementArrayList.len());
+				//Log("dx: "+dx);
+				//Log("dy: "+dy);
+				//Log("townIndustryPlacementArrayList length: "+townIndustryPlacementArrayList.len());
 				//-----------------------------------------------
 				
 				//pick a random tile within the towns placement area and test if an industry can be build on that tile.
@@ -276,7 +276,7 @@ function Builder::placeTownIndustries(indu){
 					//the inner loop checks if the randomly selected tile within the towns placement area is buildable acording to a few rules.
 					do {
 						local randomTileIndex = GSBase.RandRange(townIndustryPlacementArrayList.len());
-						if (industryId == 47 || industryId == 23){
+						if (industryId == 23){
 							townIndustryPlacementArrayList = Util.Randomize(townIndustryPlacementArrayList);
 							randomTile = townIndustryPlacementArrayList.pop();
 						} else {
@@ -306,8 +306,8 @@ function Builder::placeTownIndustries(indu){
 							//Log("offset Y");
 						}
 						randomTile = GSMap.GetTileIndex(tileX, tileY);
-						Log("randomTile X has been ofset tile by: "+dx);
-						Log("randomTile Y has been ofset tile by: "+dy);
+						//Log("randomTile X has been ofset tile by: "+dx);
+						//Log("randomTile Y has been ofset tile by: "+dy);
 
 						if (!Tile().CheckTownArea(randomTile) && townIndustryPlacementArrayList.len() == 0) {
 							local townExpanded = GSTown.ExpandTown(townId, 2); //town is expanded by 2 houses.
@@ -334,10 +334,9 @@ function Builder::placeTownIndustries(indu){
 						E("Industry is not buildable: "+industryId);
 					}
 
-					//if the randomly selected tile for 50 itterations was useless we expand the town to increase the area of influence a little and update the town industry placement array.
 					//Then the loop runs all over again.
-					if (industryId == 47 || industryId == 23){
-						Log("townIndustryPlacementArrayList length =" +townIndustryPlacementArrayList.len());
+					if (industryId == 23){
+						//Log("townIndustryPlacementArrayList length =" +townIndustryPlacementArrayList.len());
 						if (!industryPlaced && townIndustryPlacementArrayList.len() == 0) {
 							local townExpanded = GSTown.ExpandTown(townId, 2); //town is expanded by 2 houses.
 							Log ("Town has been expanded!");
@@ -347,6 +346,8 @@ function Builder::placeTownIndustries(indu){
 							}
 							townIndustryPlacementArrayList = Util.GetTownIndustryPlacementArray(townGridList, townId, industryId);
 						}	
+					} else if (industryId == 7 || industryId == 47) {
+						industryPlaced = true;
 					}
 				}while(!industryPlaced);
 				

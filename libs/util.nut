@@ -62,7 +62,7 @@ function Util::GetTownIndustryPlacementArray(townGridList, townId, industryId)
 	local townIndustryPlacementArrayList = GSTileList();
 	for(current_tile = townGridList.Begin(); !townGridList.IsEnd(); current_tile = townGridList.Next()) {
 		local manhattanDistance = GSTown.GetDistanceManhattanToTile(townId, current_tile);		
-		if (industryId == 47 || industryId == 23){
+		if (industryId == 23){
 			if (GSTile.IsWithinTownInfluence(current_tile,townId)){
 				townIndustryPlacementArrayList.AddTile(current_tile);
 			}
