@@ -3,7 +3,9 @@ Todo:
 
 High Priority
  - [ ] Fjern skilte fra byerne der viser hvilke indutrier byen indeholder
-
+ - [ ] Gas Station bliver ikke placeret endnu
+ - [ ] Havnen bliver ikke placeret endnu men overvej om den bare skal ligge tilfældigt på mappet 
+ - [ ] Forge bliver ikke placeret endnu
 
 
 
@@ -15,9 +17,7 @@ Mangler
  - [ ] Den prøver at placere oil rigs inde i bjergene :)
  - [ ] Borders så indutrierne ikke ligger helt tæt på kanten af kortet
  - [ ] Lad byen ændre vand i en radius af x omkring sig
- - [ ] Gas Station bliver ikke placeret endnu
- - [ ] Havnen bliver ikke placeret endnu men overvej om den bare skal ligge tilfældigt på mappet 
- - [ ] Forge bliver ikke placeret endnu
+ 
 
 
 Fixed Stuff
