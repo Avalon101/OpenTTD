@@ -9,7 +9,7 @@ Mangler
  - [ ] Fjern skilte fra byerne der viser hvilke indutrier byen indeholder
  - [ ] Lad byen ændre vand i en radius af x omkring sig
  - [ ] Gas Station bliver ikke placeret endnu
- - [ ] Havnen bliver ikke placeret endnu 
+ - [ ] Havnen bliver ikke placeret endnu men overvej om den bare skal ligge tilfældigt på mappet 
  - [ ] Forge bliver ikke placeret endnu
 
 
