@@ -3,6 +3,7 @@ Todo:
 
 Mangler
 
+ - [ ] Lad byen ændre vand i en radius af x omkring sig
  - [ ] Gas Station bliver ikke placeret endnu
  - [ ] Havnen bliver ikke placeret endnu 
  - [ ] Forge bliver ikke placeret endnu
