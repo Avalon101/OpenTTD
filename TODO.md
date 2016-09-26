@@ -17,6 +17,8 @@ Mangler
  - [ ] Den prøver at placere oil rigs inde i bjergene :)
  - [ ] Borders så indutrierne ikke ligger helt tæt på kanten af kortet
  - [ ] Lad byen ændre vand i en radius af x omkring sig
+ - [ ] Add start byen til listen over byer
+ - [ ] Random by mangler nogle gange tal foran by navn
  
 
 
