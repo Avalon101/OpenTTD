@@ -6,7 +6,7 @@ High Priority
  - [ ] Gas Station bliver ikke placeret endnu (NC)
  - [ ] Havnen bliver ikke placeret endnu men overvej om den bare skal ligge tilfældigt på mappet (Kasper)
  - [ ] Forge bliver ikke placeret endnu (NC)
-
+ - [ ] Add start byen til listen over byer (NC)
 
 
 
@@ -17,7 +17,7 @@ Mangler
  - [ ] Den prøver at placere oil rigs inde i bjergene :)
  - [ ] Borders så indutrierne ikke ligger helt tæt på kanten af kortet
  - [ ] Lad byen ændre vand i en radius af x omkring sig
- - [ ] Add start byen til listen over byer
+
  - [ ] Random by mangler nogle gange tal foran by navn
  
 
