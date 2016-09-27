@@ -3,9 +3,8 @@ Todo:
 
 High Priority
  
- - [ ] Gas Station bliver ikke placeret endnu GRF conditions (NC)
- - [ ] Havnen bliver ikke placeret endnu men overvej om den bare skal ligge tilfældigt på mappet (Kasper)
- - [ ] Forge bliver ikke placeret endnu, GRF conditions (NC)
+
+ - [ ] Havnes kræv er fjernet i GRF - prøv at placere på map (Kasper)
  - [ ] Add start byen til listen over byer (NC)
 
 
@@ -23,6 +22,8 @@ Mangler
 
 
 Fixed Stuff
+  - [x] Gas Station bliver ikke placeret endnu GRF conditions (NC)
+  - [x] Forge bliver ikke placeret endnu, GRF conditions (NC)
   - [x] Fjern skilte fra byerne der viser hvilke indutrier byen indeholder (NC)
   - [x] Iron Works bliver ikke placeret endnu
   - [x] Opdater fredningsområdet knyttet til de enkelte industrier.
