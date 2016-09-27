@@ -346,9 +346,9 @@ function Builder::placeTownIndustries(indu){
 							}
 							townIndustryPlacementArrayList = Util.GetTownIndustryPlacementArray(townGridList, townId, industryId);
 						}	
-					} else if (industryId == 47) {
+					} /*else if (industryId == 47) {
 						industryPlaced = true;
-					}
+					}*/
 				}while(!industryPlaced);
 				
 				//set industry sign
