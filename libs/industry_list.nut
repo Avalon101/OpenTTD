@@ -49,7 +49,7 @@ INDUSTRY <- {
 				RecyclingDepot = {no = 15, dx = 2, dy = 2, ltype = 2, id = 23},
 				Sawmill = {no = 1, dx = 0, dy = 0, ltype = 0, id = 2},
 				SheepFarm = {no = 12, dx = 0, dy = 0, ltype = 0, id = 26},
-				SmithyForge = {no = 1, dx = 2, dy = 1, ltype = 3, id = 7},
+				SmithyForge = {no = 1, dx = 2, dy = 1, ltype = 2, id = 7},
 				SteelMill = {no = 1, dx = 4, dy = 4, ltype = 0, id = 8},
 				Stockyard = {no = 3, dx = 5, dy = 4, ltype = 2, id = 35},
 				SugarRefinery = {no = 4, dx = 4, dy = 3, ltype = 2, id = 17},
