@@ -4,8 +4,7 @@ Todo:
 High Priority
  
  - [ ] Gas Station bliver ikke placeret endnu GRF conditions (NC)
- - [ ] Havnen bliver ikke placeret endnu men overvej om den bare skal ligge tilfældigt på mappet (Kasper)
-
+ - [ ] Havnes kræv er fjernet i GRF - prøv at placere på map (Kasper)
  - [ ] Add start byen til listen over byer (NC)
 
 
