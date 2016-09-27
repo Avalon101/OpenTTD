@@ -11,7 +11,7 @@ High Priority
 
 
 Mangler
- - [ ] Hardware Store og Food Market failede - Gør byen større og prøve igen - Gør det nogle gange :P 
+  
  - [ ] Rille gennem kortet opstår fra tid til anden
  - [ ] Den prøver at placere oil rigs inde i bjergene :)
  - [ ] Borders så indutrierne ikke ligger helt tæt på kanten af kortet
@@ -22,6 +22,7 @@ Mangler
 
 
 Fixed Stuff
+  - [x] Hardware Store og Food Market failede - Gør byen større og prøve igen - Gør det nogle gange :P
   - [x] Gas Station bliver ikke placeret endnu GRF conditions (NC)
   - [x] Forge bliver ikke placeret endnu, GRF conditions (NC)
   - [x] Fjern skilte fra byerne der viser hvilke indutrier byen indeholder (NC)
