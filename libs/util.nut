@@ -208,6 +208,20 @@ function Util::SetSigns(text, amount, dx, dy, id, landtile = true)
 }
 
 
+// Set signs in towns for each industry assigned to that town.
+function Util::SetSignsTown(playerTownTable)
+{
+	foreach(i, townSet in playerTownTable)
+	{
+		local towntile = GSTown.GetLocation(playerTownTable[i].town_id);	// find the tile location of town center
+		foreach( j, industry in townSet.industries)
+		{
+			local signtile = Tile.Neighbour(towntile,j+1, j+1); // Get the tile location for the tile below last industry sign in town. This makes sure the signs a set up on a pretty list and are readable.
+			local text = "Town - " + GSIndustryType.GetName(industry);	// create the text for the sign (" Town - [industryname]")
+			Util.SetSign(text, signtile);	// plant sign
+		}
+	}
+}
 
 
 

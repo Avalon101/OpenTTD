@@ -81,6 +81,10 @@ function Builder::RunOnce(){
 		// Make all towns for all players
 		this.MakeTowns();
 
+		//Placing industry signs
+		this.AssignTownIndustries();
+		//foreach(j, player in this.players){ Util.SetSignsTown(player.towns) }	// Set signs in towns ( obsolete when planting making indstries)
+
 		local indu = Industries();
 		//// Function responsible for all things cencerning placement of land industies on the map.
 		foreach(i,v in indu.norm) this.MakeIndustries(GSIndustryType.GetName(v["id"]), v["no"], v["dx"], v["dy"], v["id"], true); 
@@ -88,8 +92,6 @@ function Builder::RunOnce(){
 		//// Function responsible for all things cencerning placement of water industies on the map.
 		foreach(i,v in indu.water) this.MakeIndustries(GSIndustryType.GetName(v["id"]), v["no"], v["dx"], v["dy"], v["id"],false);
 
-		//Placing industry signs
-		this.SetTownSigns();
 
 		//Placing industries in towns:
 		this.placeTownIndustries(indu);
@@ -131,21 +133,20 @@ function Builder::MakeTowns()
 	}
 }
 
-//// Functions for making signs.
-function Builder::SetTownSigns()
-{
+//// AssignTownIndustries assigns all the industries from the industry_list.nut that
+//// has been marked for towns. Industries are assigned to random towns in the
+//// players town table.
+
+function Builder::AssignTownIndustries(){
 	for(local p=1; p<=this.gPlayers; p++){
 		local ilist_temp = Industries().town;
-		// Remove Recycle depot from list (idx 0) and set Recycle depot sign in all towns
-		ilist_temp.remove(0);
+		// Remove Recycle depot from list (idx 0) and save it for later. will be assign each town as last industry for every town.
+		local recycle_depot = ilist_temp[0]; ilist_temp.remove(0);
+
+		// Copy players towntable for a working copy. The copy will replace the players towntable when finished working on it.
 		local ptown_tables = this.players[p-1].towns;
-		foreach(i,town in ptown_tables){
-			local tile = GSTown.GetLocation(town["town_id"]);
-			local text = "Town - Recycling Depot";
-			//Util.SetSign(text, tile);
-			ptown_tables[i].industries.append(23);
-		}
-		// For each industry, pull random town belonging to player and sign that industry to the city.
+
+		// For each industry, pull random town belonging to player and assign that industry to the city.
 		// Subtract 1 from the  count in ilist_temp for that industry.
 		// Do this as long as the count > 0;			//cycle industries
 		while(ilist_temp.len()>0){
@@ -155,29 +156,28 @@ function Builder::SetTownSigns()
 
 				if(ptown_tables[rand_idx].industries.len() < this.gTownIndustries){ // check if town has max number of industries already
 					local its_a_dupe = false;
-					//local industryCheck = false;
 					foreach(i,indu_id in ptown_tables[rand_idx].industries){ // cylces industries already in town
 						if(current_industry["id"] == indu_id) its_a_dupe = true;	// check if industry already exists in town.
-						//industryCheck = Util.IndustryCheck(current_industry, indu_id);
 					}
-					if (its_a_dupe==false /*&& industryCheck==!true*/){		// if industry not already in town, add industry to town
+					if (its_a_dupe==false){		// if industry not already in town, add industry to town
 						ptown_tables[rand_idx].industries.append(current_industry["id"]);	// adds industry to town to keep track of industries in every town
 						this.players[p-1].towns = ptown_tables;				// update the town industry list for this current player
-						local tile = GSTown.GetLocation(ptown_tables[rand_idx].town_id);	// plant sign
-						tile = Tile().Neighbour(tile,ptown_tables[rand_idx].industries.len()-1, ptown_tables[rand_idx].industries.len()-1);
-						local text = "Town - " + GSIndustryType.GetName(current_industry["id"]);	// plant sign
-						//Util.SetSign(text, tile);	// plant sign
 						current_industry["no"]--;	// subtract from counter, so we only put desired amount of this industry on the map
 					}
 				}
 			}
 		}
-		Log("Player"+p+" has towns: "+ ptown_tables.len());
+		// Add the recycle depot(industryID 23) we set aside earlier. add it to every town.
+		foreach(i, playerTowns in this.players[p-1].towns)
+			{ this.players[p-1].towns[i].industries.append(23)}
+
+		// Log the players towns and assigned industries in those towns.
+		Log(" "); // empty line
+		Log("----------------Player"+p+" has towns: "+ ptown_tables.len() + "----------------");
 		foreach(i,table in ptown_tables) {
-			Log(GSTown.GetName(table["town_id"]) + " has " + (table.industries.len())  + " industries");
-			foreach(i,industry in table.industries) {
-				Log(GSIndustryType.GetName(industry));
-			}
+			Log(GSTown.GetName(table["town_id"]) + " has been assigned " + (table.industries.len())  + " industries");
+			foreach(i,industry in table.industries)
+				{ Log("         " + GSIndustryType.GetName(industry)) }
 		}
 	}
 	return;
