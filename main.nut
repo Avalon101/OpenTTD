@@ -36,7 +36,10 @@ class Builder extends GSController
 }
 function Builder::Start()
 {
-	Log("Builder has begun!");
+	Log("Builder has begun!");		
+	/*foreach(i,v in GSTownList()){			// for testing town not getting renamed
+		Log(GSTown.IsValidTown(i) + " : " + i + " : " + GSTown.GetName(i));
+	}*/ 
 	if (this.isComplete == false) {
 		//GSGame.Pause();			//Pause game while GS is building the map.
 		this.Init();		// running some basic settings and other necessary stuff.. dont change this.
@@ -79,8 +82,8 @@ function Builder::Load(version, data)
 function Builder::RunOnce(){
 	while(!this.isComplete){
 		// Make all towns for all players
-		this.MakeTowns();
-
+		this.MakeTowns(49);
+		this.AssignTowns();
 		//Placing industry signs
 		this.AssignTownIndustries();
 		//foreach(j, player in this.players){ Util.SetSignsTown(player.towns) }	// Set signs in towns ( obsolete when planting making indstries)
@@ -99,39 +102,51 @@ function Builder::RunOnce(){
 		this.isComplete = true;
 	}
 }
-//// MakeTown2 creates a town at random location.
-function Builder::MakeTowns()
-{
-	for(local i=0;i<this.gTowns;i++){	// cycle through a number of cities. This order, with cities over playes, gives a more even dstribution, compared to players over cities
-		for(local p=1; p<=this.gPlayers; p++){	// cycle through players
-			local isTownFounded = false;
-			while (!isTownFounded) {
-				local tile = Tile().RandLand();		// Find random tile
-				local closestTown = GSTile.GetClosestTown(tile); // Find id of closest town
-				local distanceTownToTile = GSTown.GetDistanceManhattanToTile(closestTown, tile); // Get manhattan distance between tile and town
-				Log("distance from " + tile + " to " + "town " + closestTown + ": " + distanceTownToTile);
-				if (distanceTownToTile > 49){
-					if (GSTown.FoundTown(tile, 0, false, 1, 0))
-					{
-						// Assigning player number to town name
-						local town_id = GSTown.GetTownCount()-1;
-						local town_name = this.gTownNames.pop(); //Rename from custom town names list
-						local new_name = p + " - " + town_name;
-						GSTown.SetName(town_id,new_name);
-						// Add the city to the town index reference on the players city
-						Log(town_id);
-						this.players[p-1].AddTown(town_id);
 
-						Log("Town " + new_name + " founded at location " + tile);
-						isTownFounded = true;
-					}
-					else {E("Town not founded at location " + tile + ", trying new location...");}
-				}
-				else {E("Too close to another town");}
-			}
+//// MakeTowns creates a town at random location.
+function Builder::MakeTowns(minDistance)
+{
+	while(GSTown.GetTownCount()< (this.gTowns * this.gPlayers))
+	{
+		local isTownFounded = false;
+		while(!isTownFounded)
+		{
+			local tile = Tile().RandLand();
+			local closestTown = GSTile.GetClosestTown(tile);
+			local distanceTownToTile = GSTown.GetDistanceManhattanToTile(closestTown, tile);
+			if (distanceTownToTile > minDistance)
+			{
+				if(GSTown.FoundTown(tile, 0, false, 1, 0)){
+					//Log(GSTown.GetTownCount() + " Town founded!");
+					isTownFounded = true;
+				} //else { E("Town not founded. Unknown reason! Trying new location..")}
+			} //else { E("Too close to another town! Retrying with new location..")}
 		}
 	}
+	Log(GSTown.GetTownCount() + " towns has been created.");
 }
+
+
+function Builder::AssignTowns()
+{
+	// converting GS API List type to  Squirrel array
+	local townList = [];
+	foreach(i,v in GSTownList()){ townList.append(i)} // Creates townList, descending
+	while(townList.len() > 0){
+		for(local p=0; p<this.gPlayers; p++){
+			local townID = townList.pop();
+			local townName = this.gTownNames.pop();
+			local newName = (p+1) + " - " + townName;
+			//Log(GSTown.IsValidTown(townID) + " : " + townID + " : " + GSTown.GetName(townID) + " : " + newName + ";" +newName.len());
+			//local namechange = false;
+			//while(!namechange){	if(GSTown.SetName(townID,newName)){namechange = true} else{Log(GSTown.IsValidTown(townID) + " : " + townID + " : " + GSTown.GetName(townID) + " : " + newName + ";" +newName.len()); assert(false)}}
+			GSTown.SetName(townID, newName);
+			this.players[p].AddTown(townID);
+		}
+	}
+	Log(this.gTowns + " towns assigned to each player.");
+}
+
 
 //// AssignTownIndustries assigns all the industries from the industry_list.nut that
 //// has been marked for towns. Industries are assigned to random towns in the

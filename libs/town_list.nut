@@ -1,4 +1,4 @@
-TownNames <- ["Koebenhavn",
+TownNames <- ["Billund",
 				"Aarhus",
 				"Odense",
 				"Aalborg",
