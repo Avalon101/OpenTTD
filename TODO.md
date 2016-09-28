@@ -5,9 +5,6 @@ High Priority
  
 
  - [ ] Havnes kræv er fjernet i GRF - prøv at placere på map (Kasper)
- - [ ] Add start byen til listen over byer (NC)
-
-
 
 
 Mangler
@@ -22,6 +19,7 @@ Mangler
 
 
 Fixed Stuff
+  - [x] Add start byen til listen over byer (NC)
   - [x] Hardware Store og Food Market failede - Gør byen større og prøve igen - Gør det nogle gange :P
   - [x] Gas Station bliver ikke placeret endnu GRF conditions (NC)
   - [x] Forge bliver ikke placeret endnu, GRF conditions (NC)
