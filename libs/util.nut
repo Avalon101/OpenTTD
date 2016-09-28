@@ -10,6 +10,27 @@ class Util
 //// Functions for different stuff.
 ////////////////////////////////////////////////////
 
+function Util::CheckBorders(xTile, yTile)
+{	
+	local mapSizeX = GSMap.GetMapSizeX()-2;
+	local mapSizeY = GSMap.GetMapSizeY()-2;
+
+	local value = true;
+	if (xTile > mapSizeX){				
+		value = false;
+	}
+	if (yTile > mapSizeY){				
+		value = false;
+	}
+	if (xTile < 1){				
+		value = false;
+	}
+	if (yTile < 1){				
+		value = false;
+	}	
+	return value;
+}
+
 function Util::IndustryCheck(current_industry, indu_id)
 {	
 	local industryCheck = false;
@@ -36,10 +57,10 @@ function Util::IndustryCheck(current_industry, indu_id)
 function Util::CreateSearchGrid(townTileX, townTileY)
 {
 	//check we dont go beyond the map borders
-	local townGridXStart = Util.BordersMin(townTileX);
-	local townGridYStart = Util.BordersMin(townTileY);
-	local townGridXEnd = Util.BordersMax(townTileX, GSMap.GetMapSizeX()); //Note: kortet ingame i TTD er 2 felter mindre end hvad mapsize returnerer !
-	local townGridYEnd = Util.BordersMax(townTileY, GSMap.GetMapSizeY()); //Note: kortet ingame i TTD er 2 felter mindre end hvad mapsize returnerer !
+	local townGridXStart = Util.BordersMin(townTileX, 19);
+	local townGridYStart = Util.BordersMin(townTileY, 19);
+	local townGridXEnd = Util.BordersMax(townTileX, GSMap.GetMapSizeX(), 19);
+	local townGridYEnd = Util.BordersMax(townTileY, GSMap.GetMapSizeY(), 19);
 
 	Log("townGridXStart: "+townGridXStart);
 	Log("townGridYStart: "+townGridYStart);
@@ -92,20 +113,20 @@ function Util::TownAreaOffset(tileValue, townTileValue)
 	return offset;
 }
 
-function Util::BordersMin(tile)  // Check that the tile in context does not go beyond the map borders (less then 0)
+function Util::BordersMin(tile, offset)  // Check that the tile in context does not go beyond the map borders (less then 0)
 {	
 	local delta = 1;
-	if (tile-19 > 0){
-		delta = tile-19;
+	if (tile-offset > 0){
+		delta = tile-offset;
 	}
 	return delta;
 }
 
-function Util::BordersMax(tile, mapsize)  // Check that the tile in context does not go beyond the map borders (More then max)
+function Util::BordersMax(tile, mapsize, offset)  // Check that the tile in context does not go beyond the map borders (More then max)
 {	
 	local delta = mapsize-2; ////Note: kortet ingame i TTD er 2 felter mindre end hvad mapsize returnerer !
-	if (tile+19 < mapsize){				
-		delta = tile+19;
+	if (tile+offset < mapsize){				
+		delta = tile+offset;
 	}
 	return delta;
 }

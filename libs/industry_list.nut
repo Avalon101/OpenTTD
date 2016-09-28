@@ -20,7 +20,7 @@ INDUSTRY <- {
 				DredgingSite = {no = 5, dx = 3, dy = 4, ltype = 1, id = 19},
 				FertilizerPlant = {no = 1, dx = 7, dy = 7, ltype = 0, id = 37},
 				FishingGrounds = {no = 6, dx = 7, dy = 7, ltype = 1, id = 31},
-				//FishingHarbor = {no = 4, dx = 0, dy = 0, ltype = 4, id = 30},
+				FishingHarbor = {no = 4, dx = 0, dy = 0, ltype = 1, id = 30},
 				FoodMarket = {no = 3, dx = 0, dy = 0, ltype = 3, id = 46},
 				Forest = {no = 8, dx = 0, dy = 0, ltype = 0, id = 12},
 				FruitPlantation = {no = 20, dx = 0, dy = 0, ltype = 0, id = 29},

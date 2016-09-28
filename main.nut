@@ -95,7 +95,6 @@ function Builder::RunOnce(){
 		//// Function responsible for all things cencerning placement of water industies on the map.
 		foreach(i,v in indu.water) this.MakeIndustries(GSIndustryType.GetName(v["id"]), v["no"], v["dx"], v["dy"], v["id"],false);
 
-
 		//Placing industries in towns:
 		this.placeTownIndustries(indu);
 
@@ -217,15 +216,52 @@ function Builder::MakeIndustries(text, amount, dx, dy, id, isLandTile){
 					//a fuction that evaluates the tile is ok in all ways before moving on.				
 					}
 					while(!(Tile.CheckAll(tile, dx, dy, bufferX, bufferY)));	
+					
+					if(id==30){
+						local coastTile = false;
+						local newTile = null;
+						local tileIsOK = true;
+						local xTile = null;
+						local yTile = null;
+
+						xTile = GSMap.GetTileX(tile);
+						yTile = GSMap.GetTileY(tile);							
+						local x = 0;
+						local y = 0;
+						local i = GSBase.RandRange(2); // skal ændres til 4 når havnene kan placeres på nordlige / vestlige kanter.
+						Log ("i: "+i);
+						if (i==0){
+							x = -1;
+							y = 0;
+						} else if (i==1){
+							x = 0;
+							y = -1;
+						} else if (i==2){
+							x = 1;
+							y = 0;
+						} else if (i==3){
+							x = 0;
+							y = 1;
+						}
+						do{
+							xTile = xTile + x;
+							yTile = yTile + y;
+							tileIsOK = Util.CheckBorders(xTile, yTile);
+
+							newTile = GSMap.GetTileIndex(xTile, yTile);								
+							coastTile = GSTile.IsCoastTile(newTile);
+						} while (tileIsOK && !coastTile);
+						if(coastTile){
+							tile = newTile;
+						}
+					}
 
 					//level an area around a tile equal to industry size (NOTE: this funcion returns true even if only a few tiles was leveled!)
 					local tilesSucessfullyLeveled = Tile().LevelTiles(tile, dx, dy);
 
 					//place industry							
 					local industryBuildable = GSIndustryType.CanBuildIndustry(id);
-					/*if(id==24 || id==20){			// overflødig, fixed i grf.
-						industryPlaced = true;
-					} else */ if (industryBuildable) {
+					if (industryBuildable) {
 						industryPlaced = Util().PlaceIndustry(id, tile);
 					}
 				}while(!industryPlaced);
@@ -279,8 +315,8 @@ function Builder::placeTownIndustries(indu){
 					dy = v["dy"];
 				}
 				
-				//Log("dx: "+dx);
-				//Log("dy: "+dy);
+				Log("dx: "+dx);
+				Log("dy: "+dy);
 				//Log("townIndustryPlacementArrayList length: "+townIndustryPlacementArrayList.len());
 				//-----------------------------------------------
 				
@@ -309,17 +345,16 @@ function Builder::placeTownIndustries(indu){
 						//x og y coordinates are move a distance equal to the aize of the industry in context)
 						local tileX = GSMap.GetTileX(randomTile);
 						local tileY = GSMap.GetTileY(randomTile);
-
+						Log("tileX: "+tileX);
+						Log("tileY: "+tileY);
 						local xOffset = Util().TownAreaOffset(tileX,townTileX);
 						local yOffset = Util().TownAreaOffset(tileY,townTileY);
 						
 						if (xOffset){
 							tileX = tileX-dx;
-							//Log("offset X");
 						}
 						if (yOffset){
 							tileY = tileY-dy;
-							//Log("offset Y");
 						}
 						randomTile = GSMap.GetTileIndex(tileX, tileY);
 						//Log("randomTile X has been ofset tile by: "+dx);
