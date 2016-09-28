@@ -155,8 +155,10 @@ function Builder::AssignTowns()
 function Builder::AssignTownIndustries(){
 	for(local p=1; p<=this.gPlayers; p++){
 		local ilist_temp = Industries().town;
-		// Remove Recycle depot from list (idx 0) and save it for later. will be assign each town as last industry for every town.
+		// Remove Recycle depot from list (idx 0). Assign each town as first industry for every town.
 		local recycle_depot = ilist_temp[0]; ilist_temp.remove(0);
+		foreach(i, playerTowns in this.players[p-1].towns)
+			{ this.players[p-1].towns[i].industries.append(23)}
 
 		// Copy players towntable for a working copy. The copy will replace the players towntable when finished working on it.
 		local ptown_tables = this.players[p-1].towns;
@@ -183,8 +185,7 @@ function Builder::AssignTownIndustries(){
 			}
 		}
 		// Add the recycle depot(industryID 23) we set aside earlier. add it to every town.
-		foreach(i, playerTowns in this.players[p-1].towns)
-			{ this.players[p-1].towns[i].industries.append(23)}
+
 
 		// Log the players towns and assigned industries in those towns.
 		Log(" "); // empty line
