@@ -89,6 +89,14 @@ function Tile::DrawRandomTile(isLandTile){ // Select between land or water tile
 	return tile;
 }
 
+function Tile::RandCoast()
+{
+	local tile = 0;
+	do{ tile = this.Rand()}
+	while(!GSTile.IsCoastTile(tile));
+	return tile;
+}
+
 function Tile::RandWater()  // Water tile
 {
 	local tile = 0;

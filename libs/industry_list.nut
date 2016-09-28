@@ -2,7 +2,7 @@
 // no: number of given industry to plant
 // dx: x length to build. If 0 means no flat land required
 // dy: y length to build
-// ltype: type of location, 0 = land tile not towns, 1 = water only, 2 = cities, 3 = cities replacing houses, 4 = town coastline
+// ltype: type of location, 0 = land tile not towns, 1 = water only, 2 = cities, 3 = cities replacing houses, 4 = coastline
 // id: FIRS industry id index
 INDUSTRY <- { 
 				AluminumPlant = {no = 1, dx = 10, dy = 5, ltype = 0, id = 9},
@@ -20,7 +20,7 @@ INDUSTRY <- {
 				DredgingSite = {no = 5, dx = 3, dy = 4, ltype = 1, id = 19},
 				FertilizerPlant = {no = 1, dx = 7, dy = 7, ltype = 0, id = 37},
 				FishingGrounds = {no = 6, dx = 7, dy = 7, ltype = 1, id = 31},
-				//FishingHarbor = {no = 4, dx = 0, dy = 0, ltype = 4, id = 30},
+				FishingHarbor = {no = 4, dx = 0, dy = 0, ltype = 4, id = 30},
 				FoodMarket = {no = 3, dx = 0, dy = 0, ltype = 3, id = 46},
 				Forest = {no = 8, dx = 0, dy = 0, ltype = 0, id = 12},
 				FruitPlantation = {no = 20, dx = 0, dy = 0, ltype = 0, id = 29},
@@ -114,11 +114,13 @@ class Industries
 	norm = null; // All industries on land (not water) and not in towns
 	water = null; // All industries at sea
 	town = null; // All industries in towns
+	coast = null; // All industries in towns
 
 	constructor(){
 		this.norm = this.TList(0);
 		this.water = this.TList(1);
-		this.town = this.TList(2); this.town.extend(this.TList(3));this.town.extend(this.TList(4));
+		this.town = this.TList(2); this.town.extend(this.TList(3));
+		this.coast = this.TList(4);
 	}
 }
 

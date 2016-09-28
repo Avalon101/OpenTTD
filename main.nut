@@ -60,6 +60,7 @@ function Builder::Init()
 	Util.ChangeSetting("construction.command_pause_level", 3); // Make it possible to build while game is pause.
 	Util.ResetRandom();
 	this.gTownNames = Util.Randomize(this.gTownNames);
+	Util.MoneySetBalance(1000000000);
 }
 
 /// SAVE and LOAD
@@ -84,20 +85,21 @@ function Builder::RunOnce(){
 		// Make all towns for all players
 		this.MakeTowns(49);
 		this.AssignTowns();
+
 		//Placing industry signs
-		this.AssignTownIndustries();
+		///this.AssignTownIndustries();
 		//foreach(j, player in this.players){ Util.SetSignsTown(player.towns) }	// Set signs in towns ( obsolete when planting making indstries)
 
 		local indu = Industries();
 		//// Function responsible for all things cencerning placement of land industies on the map.
-		foreach(i,v in indu.norm) this.MakeIndustries(GSIndustryType.GetName(v["id"]), v["no"], v["dx"], v["dy"], v["id"], true); 
+		///foreach(i,v in indu.norm) this.MakeIndustries(GSIndustryType.GetName(v["id"]), v["no"], v["dx"], v["dy"], v["id"], true); 
 
 		//// Function responsible for all things cencerning placement of water industies on the map.
 		foreach(i,v in indu.water) this.MakeIndustries(GSIndustryType.GetName(v["id"]), v["no"], v["dx"], v["dy"], v["id"],false);
-
+		this.BuildHarbors();
 
 		//Placing industries in towns:
-		this.placeTownIndustries(indu);
+		///this.placeTownIndustries(indu);
 
 		this.isComplete = true;
 	}
@@ -198,6 +200,32 @@ function Builder::AssignTownIndustries(){
 	}
 	return;
 }
+
+
+function Builder::BuildHarbors(){
+	local tile = 0;
+	local harbor = Industries().coast[0];
+	Log(GSIndustryType.GetName(harbor["id"]));
+	Log(GSIndustryType.CanBuildIndustry(harbor["id"]))
+	for(local p=0; p < this.gPlayers; p++){
+		for(local i=0; i<harbor["no"]; i++){
+			local buildSuccess = false;
+			while(!buildSuccess){
+				tile = Tile().RandCoast();
+				Log(GSMap.GetTileX(tile) + " : " + GSMap.GetTileY(tile));
+				Log("Trying to build harbor.");
+				if(GSIndustryType.BuildIndustry(tile,harbor["id"])){
+					Log("Harbor build");
+					buildSuccess = true;
+					this.Sleep(50);
+				}
+				this.Sleep(15);
+			}	
+		}
+	}
+}
+
+
 
 ////Function for placing Industries.
 function Builder::MakeIndustries(text, amount, dx, dy, id, isLandTile){
