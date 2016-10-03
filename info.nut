@@ -5,7 +5,7 @@ class Builder extends GSInfo {
   function GetName()        	{ return "MapBuilder 3"; }
   function GetDescription()	{ return "A GS to build a new world"; }
   function GetVersion()     	{ return SELF_VERSION; }
-  function GetDate()        	{ return "2016-09-09"; }
+  function GetDate()        	{ return "2016-10-01"; }
   function GetShortName() 	{ return "FLBu"; }
   function GetAPIVersion()  	{ return "1.5"; }
   function MinVersionToLoad()	{ return 1; }
