@@ -115,7 +115,7 @@ function Builder::MakeTowns(minDistance)
 			local distanceTownToTile = GSTown.GetDistanceManhattanToTile(closestTown, tile);
 			if (distanceTownToTile > minDistance)
 			{
-				if(GSTown.FoundTown(tile, 0, false, 1, 0)){
+				if(GSTown.FoundTown(tile, 0, false, 3, 0)){
 					//Log(GSTown.GetTownCount() + " Town founded!");
 					isTownFounded = true;
 				} //else { E("Town not founded. Unknown reason! Trying new location..")}
