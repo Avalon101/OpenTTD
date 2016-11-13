@@ -33,6 +33,14 @@ class Builder extends GSInfo {
 				hard_value = 7,
 				custom_value = 7,
 				flags = CONFIG_NONE, min_value = 6, max_value = 15, step_size = 1 });
+		AddSetting({ name = "industry_amount_variation",
+				description = "Industry variation:",
+				easy_value = 1,
+				medium_value = 2,
+				hard_value = 3,
+				custom_value = 1,
+				flags = CONFIG_NONE, min_value = 1, max_value = 3, step_size = 1 });
+		AddLabels("industry_amount_variation", {_1 = "Normal", _2 = "Second option", _3 = "Third option" } );
   }
 }
 

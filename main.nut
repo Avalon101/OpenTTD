@@ -89,10 +89,10 @@ function Builder::RunOnce(){
 		//foreach(j, player in this.players){ Util.SetSignsTown(player.towns) }	// Set signs in towns ( obsolete when planting making indstries)
 
 		local indu = Industries();
-		//// Function responsible for all things cencerning placement of land industies on the map.
+		// Function responsible for all things cencerning placement of land industies on the map.
 		foreach(i,v in indu.norm) this.MakeIndustries(GSIndustryType.GetName(v["id"]), v["no"], v["dx"], v["dy"], v["id"], true); 
 
-		//// Function responsible for all things cencerning placement of water industies on the map.
+		// Function responsible for all things cencerning placement of water industies on the map.
 		foreach(i,v in indu.water) this.MakeIndustries(GSIndustryType.GetName(v["id"]), v["no"], v["dx"], v["dy"], v["id"],false);
 
 		//Placing industries in towns:
